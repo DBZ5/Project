@@ -8,6 +8,7 @@ const productRoute=require("./router/Product.router")
 
 
 
+
 app.use(cors())
 app.get('/', (req, res) => {
   res.send('Hello, Express!');

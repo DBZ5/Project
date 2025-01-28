@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import axios from "axios";
+// import LoginPage from './components/LoginPage';
+import MainPage from "./components/MainPage";
+import Darkmode from "darkmode-js";
+// import SignUp from './components/SignUp';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const options = {
+    bottom: "64px", // default: '32px'
+    right: "unset", // default: '32px'
+    left: "32px", // default: 'unset'
+    time: "0.5s", // default: '0.3s'
+    mixColor: "#fff", // default: '#fff'
+    backgroundColor: "#fff", // default: '#fff'
+    buttonColorDark: "#100f2c", // default: '#100f2c'
+    buttonColorLight: "#fff", // default: '#fff'
+    saveInCookies: false, // default: true,
+    label: "🌒", // default: ''
+    autoMatchOsTheme: true, // default: true
+  };
+
+  new Darkmode(options).showWidget();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* <Route path="/login" element={<LoginPage  />} /> */}
+        <Route path="/main" element={<MainPage />} />
+        {/* <Route path="/Signup" element={<SignUp  />} /> */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
