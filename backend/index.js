@@ -10,6 +10,7 @@ const jwt =require("jsonwebtoken")
 
 const userRoute=require("./router/User.router")
 const productRoute=require("./router/Product.router")
+const wishlistRoute = require("./router/Wishlist.router");
 
 app.use(express.json())
 app.use(cors())
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/user',userRoute)
 app.use('/api/product',productRoute)
+app.use('/api/wishlist', wishlistRoute);
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

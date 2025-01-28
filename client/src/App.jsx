@@ -5,6 +5,8 @@ import LoginPage from './components/Login';
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 import SignUp from './components/SignUp';
+import ProductDetails from './components/ProductDetails';
+import Wishlist from './components/Wishlist';
 
 function App() {
 
@@ -27,8 +29,11 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/home" element={<MainPage  />} />
         <Route path="/login" element={<LoginPage  />} />
         <Route path="/Signup" element={<SignUp  />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
     </Router>
   );
