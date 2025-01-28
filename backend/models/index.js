@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 // Create Sequelize connection
-const sequelize = new Sequelize("fullstackapp", "root", "0000", {
+const sequelize = new Sequelize("fullstackapp", "root", "admin", {
   host: "localhost",
   dialect: "mysql",
 });

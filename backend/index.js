@@ -7,7 +7,7 @@ const userRoute=require("./router/User.router")
 const productRoute=require("./router/Product.router")
 
 
-
+app.use(express.json())
 app.use(cors())
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
