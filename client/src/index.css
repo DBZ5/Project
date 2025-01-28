@@ -40,7 +40,7 @@ main {
 }
 
 .nav-link:hover {
-  size: 1.04;
+  transform: scale(1.04);
   cursor: pointer;
 }
 
@@ -115,15 +115,10 @@ main {
   margin-top: -0.4rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  
 }
 
 .sidebar-category:hover {
   transform: scale(1.05);
-}
-
-.sidebar-category.light-mode:hover {
-  color: #ffffff;
 }
 
 .hero-ad {
@@ -141,4 +136,34 @@ main {
   margin-top: 1rem;
   border-radius: 20px;
   width: 75%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-ad {
+  position: relative;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-dot.active {
+  background-color: white;
 }

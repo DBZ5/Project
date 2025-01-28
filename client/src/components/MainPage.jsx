@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
 
 const MainPage = () => {
-
   const categories = [
     "Women's Fashion",
     "Men's Fashion",
@@ -12,6 +11,12 @@ const MainPage = () => {
     "Sports & Outdoors",
   ];
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [
+    "https://i.postimg.cc/pdCcb9Xk/image.png",
+    "https://i.postimg.cc/NffQXXZ7/image.png",
+    "https://i.postimg.cc/pdCcb9Xk/image.png",
+  ];
 
   return (
     <>
@@ -31,9 +36,21 @@ const MainPage = () => {
           <div className="hero-ad">
             <img
               className="ad-image"
-              src="https://i.postimg.cc/dtgDQzCb/image.png"
+              src={images[currentImageIndex]}
               alt="hero-ad"
+              style={{ transition: "opacity 0.5s ease-in-out" }}
             />
+            <div className="carousel-dots">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${
+                    currentImageIndex === index ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </main>
