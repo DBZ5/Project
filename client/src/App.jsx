@@ -4,6 +4,7 @@ import axios from "axios";
 // import LoginPage from './components/LoginPage';
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
+import ProductPage from "./components/ProductPage";
 // import SignUp from './components/SignUp';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
       <Routes>
         {/* <Route path="/login" element={<LoginPage  />} /> */}
         <Route path="/main" element={<MainPage />} />
+        <Route path="/product" element={<ProductPage />} />
         {/* <Route path="/Signup" element={<SignUp  />} /> */}
       </Routes>
     </Router>

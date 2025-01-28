@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const MainPage = () => {
@@ -25,6 +26,9 @@ const MainPage = () => {
                 <p className="sidebar-category" key={index}>{category}</p>
               ))}
             </ul>
+          </div>
+          <div className="products">
+            <Link to="/product">View Product</Link>
           </div>
         </div>
       </main>
