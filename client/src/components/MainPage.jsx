@@ -28,7 +28,7 @@ const MainPage = () => {
             </ul>
           </div>
           <div className="products">
-            <Link to="/product">View Product</Link>
+            {/* <Link to="/product">View Product</Link> */}
           </div>
         </div>
       </main>

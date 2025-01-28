@@ -5,6 +5,7 @@ import axios from "axios";
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 import ProductPage from "./components/ProductPage";
+import Navbar from "./components/Navbar";
 // import SignUp from './components/SignUp';
 
 function App() {
