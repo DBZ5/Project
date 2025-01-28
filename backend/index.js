@@ -1,13 +1,17 @@
 const express = require('express');
+require("dotenv").config()
+const bcrypt =require("bcrypt")
 const app = express();
 const port = 3000;
 const db=require("./models/index")
 const cors=require("cors")
+const jwt =require("jsonwebtoken")
+
+
 const userRoute=require("./router/User.router")
 const productRoute=require("./router/Product.router")
 
-
-
+app.use(express.json())
 app.use(cors())
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
