@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 // Create Sequelize connection
-const sequelize = new Sequelize("fullstackapp", "root", "0000", {
+const sequelize = new Sequelize("fullstackapp", "root", "admin", {
   host: "localhost",
   dialect: "mysql",
 });
@@ -24,6 +24,6 @@ db.Products.belongsTo(db.User, {
   });
 
 
-db.sequelize.sync()
+// db.sequelize.sync()
 // db.sequelize.sync({force :true})
 module.exports=db
