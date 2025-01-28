@@ -101,7 +101,6 @@ main {
   align-items: center;
   padding: 1rem 4rem;
   width: 100%;
-
 }
 
 .sidebar {
@@ -115,5 +114,31 @@ main {
   font-weight: 500;
   margin-top: -0.4rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  
 }
 
+.sidebar-category:hover {
+  transform: scale(1.05);
+}
+
+.sidebar-category.light-mode:hover {
+  color: #ffffff;
+}
+
+.hero-ad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  margin-top: 1rem;
+}
+
+.ad-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  border-radius: 20px;
+  width: 75%;
+}

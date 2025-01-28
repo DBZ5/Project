@@ -22,9 +22,18 @@ const MainPage = () => {
             <h3>Categories</h3>
             <ul>
               {categories.map((category, index) => (
-                <p className="sidebar-category" key={index}>{category}</p>
+                <p className="sidebar-category" key={index}>
+                  {category}
+                </p>
               ))}
             </ul>
+          </div>
+          <div className="hero-ad">
+            <img
+              className="ad-image"
+              src="https://i.postimg.cc/dtgDQzCb/image.png"
+              alt="hero-ad"
+            />
           </div>
         </div>
       </main>
