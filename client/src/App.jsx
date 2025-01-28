@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
-// import LoginPage from './components/LoginPage';
+import LoginPage from './components/Login';
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 import ProductPage from "./components/ProductPage";
 import Navbar from "./components/Navbar";
 // import SignUp from './components/SignUp';
+import SignUp from './components/SignUp';
 
 function App() {
 
@@ -33,6 +34,8 @@ function App() {
         <Route path="/main" element={<MainPage />} />
         <Route path="/product" element={<ProductPage />} />
         {/* <Route path="/Signup" element={<SignUp  />} /> */}
+        <Route path="/login" element={<LoginPage  />} />
+        <Route path="/Signup" element={<SignUp  />} />
       </Routes>
     </Router>
   );
