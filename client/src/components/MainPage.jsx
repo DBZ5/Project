@@ -1,31 +1,35 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logout } from '../store/authSlice';
+import React from "react";
+import Navbar from "./Navbar";
 
-function MainPage() {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const MainPage = () => {
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    }
-  }, [isAuthenticated, navigate]);
+  const categories = [
+    "Women's Fashion",
+    "Men's Fashion",
+    "Electronics",
+    "Home & Kitchen",
+    "Beauty & Health",
+    "Sports & Outdoors",
+  ];
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
 
   return (
-    <div className="main-container">
-      <h1>Welcome, {user?.fullName}</h1>
-      <p>Role: {user?.role}</p>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <>
+      <Navbar />
+      <main>
+        <div className="hero">
+          <div className="sidebar">
+            <h3>Categories</h3>
+            <ul>
+              {categories.map((category, index) => (
+                <p className="sidebar-category" key={index}>{category}</p>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </main>
+    </>
   );
-}
+};
 
 export default MainPage;
