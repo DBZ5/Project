@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 // Create Sequelize connection
-const sequelize = new Sequelize("fullstackapp", "root", "0000", {
+// const mysqlConfig=require("../config")
+const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD, {
   host: "localhost",
   dialect: "mysql",
 });
