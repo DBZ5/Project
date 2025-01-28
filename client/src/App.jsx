@@ -1,10 +1,3 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
-// import LoginPage from './components/LoginPage';
-import MainPage from "./components/MainPage";
-import Darkmode from "darkmode-js";
-// import SignUp from './components/SignUp';
 
 function App() {
 
