@@ -5,7 +5,8 @@ import axios from "axios";
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 // import SignUp from './components/SignUp';
-
+import Navbar from "./components/Navbar";
+import About from "./components/About";
 function App() {
 
   const options = {
@@ -29,6 +30,8 @@ function App() {
       <Routes>
         {/* <Route path="/login" element={<LoginPage  />} /> */}
         <Route path="/main" element={<MainPage />} />
+        <Route path="/about" element={<About />} />
+        {/* <Route path="/contact" element={<contact />} /> */}
         {/* <Route path="/Signup" element={<SignUp  />} /> */}
       </Routes>
     </Router>

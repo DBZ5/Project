@@ -117,3 +117,21 @@ main {
   cursor: pointer;
 }
 
+   /* client/src/components/About.css */
+   .about-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    flex-direction: column;
+  }
+
+  .about-content {
+    max-width: 100%;
+  }
+
+  .about-image img {
+    max-width: 100%;
+    height: auto;
+  }
+
