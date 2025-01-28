@@ -1,62 +1,85 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { loginSuccess } from '../store/authSlice';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { authStart, authSuccess, authFailure } from '../store/authSlice';
 
-function Login() {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-  const handleSubmit = (e) => {
+//   useEffect(() => {
+//     if (isAuthenticated) {
+//       navigate('/main');
+//     }
+//   }, [isAuthenticated, navigate]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', formData);
-    
-    // Simulate successful login for testing
-    dispatch(loginSuccess({
-      user: {
-        fullName: 'Test User',
-        email: formData.email,
-        role: 'user'
-      },
-      token: 'fake-token'
-    }));
-    
-    navigate('/main');
+    dispatch(authStart());
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/user/login', formData);
+      dispatch(authSuccess(response.data));
+      navigate('/main');
+    } catch (err) {
+      dispatch(authFailure(err.response?.data?.message || 'Login failed'));
+    }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-container">
+      <div className="auth-box">
+        <h2>Login</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button 
+            type="submit" 
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+        <p className="auth-link">
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
+      </div>
     </div>
   );
-}
+};
 
 export default Login;
