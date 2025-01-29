@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from "axios";
 
 const MainPage = () => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = () => {
-      axios.get("http://localhost:5173/api/product")
-        .then(response => {
-          setProducts(Array.isArray(response.data) ? response.data : []);
-        })
-        .catch(error => {
-          console.error("Error fetching products:", error);
-        });
-    };
-    fetchProducts();
-  }, []);
-
   const categories = [
     "Women's Fashion",
     "Men's Fashion",
@@ -110,22 +94,6 @@ const MainPage = () => {
                       </p>
                     </div>
                   </div>
-<<<<<<< HEAD
-                );
-              })}
-            </div>
-          </div>
-          <div className="products">
-            {products.map((product) => (
-              <Link to={`/product/${product.id}`} key={product.id}>
-                <div className="product-item">
-                  <h4>{product.name}</h4>
-                  <p>${product.price}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-=======
                   <button className="product-button">
                     {" "}
                     <svg
@@ -146,7 +114,6 @@ const MainPage = () => {
             );
           })}
 
->>>>>>> 08252e551b47daa1b1061f48848abca6bb284794
         </div>
       </main>
     </>
