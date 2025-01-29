@@ -26,7 +26,7 @@ function App() {
 
   new Darkmode(options).showWidget();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID"; // Replace with your Google Client ID
+  const GOOGLE_CLIENT_ID = "181292479338-qu3s0buf3v2rqn891qcg9ca3pjdadkoc.apps.googleusercontent.com"; // Replace with your Google Client ID
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
