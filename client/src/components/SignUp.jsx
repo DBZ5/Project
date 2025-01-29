@@ -16,11 +16,11 @@ const SignUp = () => {
   const navigate = useNavigate();
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/main');
-    }
-  }, [isAuthenticated, navigate]);
+//   useEffect(() => {
+//     if (isAuthenticated) {
+//       navigate('/main');
+//     }
+//   }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -34,7 +34,7 @@ const SignUp = () => {
     dispatch(authStart());
 
     try {
-      const response = await axios.post('http://localhost:3000/api/user/createAccount', formData);
+      const response = await axios.post('http://localhost:8000/api/user/createAccount', formData);
       dispatch(authSuccess(response.data));
       navigate('/main');
     } catch (err) {

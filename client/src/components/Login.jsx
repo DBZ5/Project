@@ -32,7 +32,7 @@ const Login = () => {
     dispatch(authStart());
 
     try {
-      const response = await axios.post('http://localhost:3000/api/user/login', formData);
+      const response = await axios.post('http://localhost:8000/api/user/login', formData);
       dispatch(authSuccess(response.data));
       navigate('/main');
     } catch (err) {
@@ -43,27 +43,28 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h2>Login</h2>
+        <h2>Log in to Exclusive</h2>
+        <p className="subtitle">Enter your details below</p>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email:</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
+              placeholder="Email or Phone Number"
             />
           </div>
           <div className="form-group">
-            <label>Password:</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
+              placeholder="Password"
             />
           </div>
           <button 
@@ -71,11 +72,15 @@ const Login = () => {
             className="auth-button"
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            Log in
+          </button>
+          <button type="button" className="google-button">
+            <img src="/google-icon.svg" alt="Google" />
+            Sign in with Google
           </button>
         </form>
         <p className="auth-link">
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
     </div>
