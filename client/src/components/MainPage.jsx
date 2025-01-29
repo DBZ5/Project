@@ -18,9 +18,11 @@ const MainPage = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
-    "https://i.postimg.cc/pdCcb9Xk/image.png",
-    "https://i.postimg.cc/NffQXXZ7/image.png",
-    "https://i.postimg.cc/pdCcb9Xk/image.png",
+    "https://images-ext-1.discordapp.net/external/DcyfETpr8crvX0HahkH9RhxkpxqLzNHwAYN0xhPHRAA/https/i.postimg.cc/wBKJYLWd/image.png?format=webp&quality=lossless&width=1440&height=515", // iPhone series - dark background with "15% OFF VOUCHER"
+    "https://www.shutterstock.com/image-vector/banner-announcing-mega-discount-half-260nw-1962489325.jpg", // Gaming PC - black backdrop with "20% DISCOUNT"
+    "https://media.discordapp.net/attachments/1333469677254348942/1334167730143629332/IMG_2331.jpg?ex=679b8c06&is=679a3a86&hm=7245ee75759b7d4dbc03c8b45dfdbf9bc537b1a7fd567a61ad3d38db8633b574&=&format=webp&width=1440&height=496", // Premium Fashion - dark theme "SPECIAL OFFER"
+   "https://media.discordapp.net/attachments/1333469677254348942/1334167729845964852/IMG_2329.jpg?ex=679b8c06&is=679a3a86&hm=93c1c4122a0286382ede70e738142e072950974e83de4dc6691f4485cd052c8c&=&format=webp&width=1440&height=496",
+    "https://media.discordapp.net/attachments/1333469677254348942/1334167730428973076/IMG_2333.jpg?ex=679b8c06&is=679a3a86&hm=ea8391dea3df81e65369ddbd1f77519453867c4eff121647ebdbcdd250a53128&=&format=webp&width=1440&height=496", // MacBook series - sleek black with "10% OFF"
   ];
 
   const fetchData = async () => {
