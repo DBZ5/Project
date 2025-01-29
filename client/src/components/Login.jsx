@@ -34,7 +34,7 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8000/api/user/login', formData);
       dispatch(authSuccess(response.data));
-      navigate('/main');
+      navigate('/');
     } catch (err) {
       dispatch(authFailure(err.response?.data?.message || 'Login failed'));
     }

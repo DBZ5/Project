@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { authStart, authSuccess, authFailure } from '../store/authSlice';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { authStart, authSuccess, authFailure } from "../store/authSlice";
+import Navbar from "./Navbar";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    role: 'user'
+    fullName: "",
+    email: "",
+    password: "",
+    role: "user",
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
 
 //   useEffect(() => {
 //     if (isAuthenticated) {
@@ -25,7 +28,7 @@ const SignUp = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -36,14 +39,17 @@ const SignUp = () => {
     try {
       const response = await axios.post('http://localhost:8000/api/user/createAccount', formData);
       dispatch(authSuccess(response.data));
-      navigate('/main');
+      navigate("/");
     } catch (err) {
-      dispatch(authFailure(err.response?.data?.message || 'Registration failed'));
+      dispatch(
+        authFailure(err.response?.data?.message || "Registration failed")
+      );
     }
   };
 
   return (
     <div className="auth-container">
+      <Navbar />
       <div className="auth-box">
         <h2>Sign Up</h2>
         {error && <div className="error-message">{error}</div>}
@@ -90,12 +96,8 @@ const SignUp = () => {
               <option value="seller">Seller</option>
             </select>
           </div>
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? 'Signing up...' : 'Sign Up'}
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
         <p className="auth-link">
