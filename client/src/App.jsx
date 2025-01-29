@@ -5,6 +5,7 @@ import LoginPage from "./components/Login";
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 import SignUp from "./components/SignUp";
+import AdminPage from "./components/AdminPage";
 
 function App() {
   const options = {
@@ -29,9 +30,11 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+ 

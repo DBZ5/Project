@@ -11,3 +11,5 @@ exports.getAllProducts = async (req, res) => {
   res.status(200).json(products);
 };
 
+
+

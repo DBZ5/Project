@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import axios from "axios";
 import axios from "axios";
 
 const MainPage = () => {
