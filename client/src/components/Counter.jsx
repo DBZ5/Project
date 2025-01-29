@@ -10,11 +10,11 @@ const CountdownTimer = () => {
   });
 
   useEffect(() => {
-    const targetDate = new Date("2025-02-28T00:00:00"); // Target countdown date
+    const targetDate = new Date("2025-02-19T00:00:00"); 
 
     const calculateTimeLeft = () => {
-      const now = new Date(); // Current date and time
-      const difference = targetDate - now; // Time difference in milliseconds
+      const now = new Date();
+      const difference = targetDate - now; 
 
       if (difference > 0) {
         // Calculate remaining time
@@ -40,23 +40,26 @@ const CountdownTimer = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center p-4">
-      <h1 className="text-2xl font-bold mb-4">Countdown to 2025-02-28</h1>
-      <div className="flex space-x-4 text-xl font-semibold">
-        <div>
-          <span>{timeLeft.days}</span> days
-        </div>
-        <div>
-          <span>{timeLeft.hours}</span> hours
-        </div>
-        <div>
-          <span>{timeLeft.minutes}</span> minutes
-        </div>
-        <div>
-          <span>{timeLeft.seconds}</span> seconds
+    <div className="countdown-container">
+        <div className="countdown-item">
+          <p>Days</p>
+        <h2 className="countdown-number">{timeLeft.days}</h2>
+        
+        </div> <p className="countdown-separator">:</p>
+        <div className="countdown-item">
+          <p>Hours</p>
+        <h2 className="countdown-number">{timeLeft.hours}</h2>
+        
+        </div> <p className="countdown-separator">:</p>
+        <div className="countdown-item">
+          <p>Minutes</p>
+          <h2 className="countdown-number">{timeLeft.minutes}</h2>
+        </div> <p className="countdown-separator">:</p>
+        <div className="countdown-item">
+          <p>Seconds</p>
+          <h2 className="countdown-number">{timeLeft.seconds}</h2>
         </div>
       </div>
-    </div>
   );
 };
 
