@@ -1,0 +1,117 @@
+.cart-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cart-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+  }
+  
+  .cart-items {
+    margin-bottom: 20px;
+  }
+  
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+  }
+  
+  .cart-item:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .item-details {
+    flex: 1;
+  }
+  
+  .item-name {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .item-price {
+    color: #555;
+    font-size: 16px;
+  }
+  
+  .item-quantity {
+    width: 100px;
+  }
+  
+  .quantity-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .coupon-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .coupon-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  
+  .coupon-button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .coupon-button:hover {
+    background-color: #218838;
+  }
+  
+  .cart-total {
+    text-align: right;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  .cart-total p {
+    margin: 5px 0;
+  }
+  
+  .subtotal-amount,
+  .shipping-amount,
+  .total-amount {
+    font-weight: bold;
+  }
+  
+  .checkout-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .checkout-button:hover {
+    background-color: #0056b3;
+  }
