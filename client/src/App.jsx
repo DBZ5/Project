@@ -5,6 +5,9 @@ import LoginPage from "./components/Login";
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
 import SignUp from "./components/SignUp";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import { NavLink } from "react-router-dom";
 
 function App() {
   const options = {
@@ -27,6 +30,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>
