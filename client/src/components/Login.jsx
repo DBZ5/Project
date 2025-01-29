@@ -83,7 +83,6 @@ const Login = () => {
   return (
     <div className="auth-container">
       <Navbar />
-      <Navbar />
       <div className="auth-box">
         <h2>Log in to Exclusive</h2>
         <p className="subtitle">Enter your details below</p>
