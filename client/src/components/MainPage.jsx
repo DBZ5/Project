@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import axios from "axios";
+import CountdownTimer from "./Counter";
 
 const MainPage = () => {
   const categories = [
@@ -18,9 +19,9 @@ const MainPage = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
-    "https://i.postimg.cc/pdCcb9Xk/image.png",
-    "https://i.postimg.cc/NffQXXZ7/image.png",
-    "https://i.postimg.cc/pdCcb9Xk/image.png",
+    "https://i.postimg.cc/wBKJYLWd/image.png",
+    "https://i.postimg.cc/K8LVbXPp/Frame-1.png",
+    "https://i.postimg.cc/BQD9S1sC/Frame-2.png",
   ];
 
   const fetchData = async () => {
@@ -30,8 +31,6 @@ const MainPage = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-
-
   };
 
   useEffect(() => {
@@ -73,7 +72,8 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <h3 className="products-title">Products</h3>
+        <h1 className="products-title">Flash Sales</h1>
+        <CountdownTimer />
         <div className="products">
           {data.map((product) => {
             return (
@@ -113,7 +113,6 @@ const MainPage = () => {
               </div>
             );
           })}
-
         </div>
       </main>
     </>

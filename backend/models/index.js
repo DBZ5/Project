@@ -28,5 +28,5 @@ db.Products.belongsTo(db.User, {
 });
 
 db.sequelize.sync();
-// db.sequelize.sync({force :true})
+db.sequelize.sync({alter :true})
 module.exports = db;
