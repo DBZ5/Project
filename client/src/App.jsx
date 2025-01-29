@@ -1,10 +1,4 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
-import LoginPage from "./components/Login";
-import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
-import SignUp from "./components/SignUp";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -35,29 +29,19 @@ function App() {
   const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID"; // Replace with your Google Client ID
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </Router>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
-        {<Navbar />}
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route 
-            path="/main" 
+            path="/" 
             element={
               <ProtectedRoute>
                 <MainPage />
               </ProtectedRoute>
             } 
           />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

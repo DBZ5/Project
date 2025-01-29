@@ -4,7 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { authStart, authSuccess, authFailure } from "../store/authSlice";
 import Navbar from "./Navbar";
-
 const SignUp = () => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -49,7 +48,8 @@ const SignUp = () => {
 
   return (
     <div className="auth-container">
-      <Navbar />
+              {<Navbar />}
+
       <div className="auth-box">
         <h2>Sign Up</h2>
         {error && <div className="error-message">{error}</div>}

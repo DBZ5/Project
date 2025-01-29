@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { authStart, authSuccess, authFailure } from '../store/authSlice';
+import Navbar from './Navbar';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +42,9 @@ const Login = () => {
   };
 
   return (
+    
     <div className="auth-container">
+              {<Navbar />}
       <div className="auth-box">
         <h2>Log in to Exclusive</h2>
         <p className="subtitle">Enter your details below</p>
