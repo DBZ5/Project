@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import LoginPage from './components/Login';
+import LoginPage from "./components/Login";
 import MainPage from "./components/MainPage";
 import Darkmode from "darkmode-js";
-// import SignUp from './components/SignUp';
-import Navbar from "./components/Navbar";
-import About from "./components/About";
-import SignUp from './components/SignUp';
+import SignUp from "./components/SignUp";
 
 function App() {
-
   const options = {
     bottom: "64px", // default: '32px'
     right: "unset", // default: '32px'
@@ -30,13 +26,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/login" element={<LoginPage  />} /> */}
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/about" element={<About />} />
-        {/* <Route path="/contact" element={<contact />} /> */}
-        {/* <Route path="/Signup" element={<SignUp  />} /> */}
-        <Route path="/login" element={<LoginPage  />} />
-        <Route path="/Signup" element={<SignUp  />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   );
