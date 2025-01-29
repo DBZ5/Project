@@ -2,7 +2,7 @@ const express = require('express');
 require("dotenv").config()
 const bcrypt =require("bcrypt")
 const app = express();
-const port = 3000;
+const port = 8000;
 const db=require("./models/index")
 const cors=require("cors")
 const jwt =require("jsonwebtoken")
