@@ -50,7 +50,7 @@
 .auth-button {
   width: 100%;
   padding: 12px;
-  background-color: #DB4444;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
@@ -100,7 +100,7 @@
 }
 
 .auth-link a {
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
 }
 
