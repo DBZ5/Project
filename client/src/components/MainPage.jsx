@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import axios from "axios";
 
 const MainPage = () => {
   const categories = [
@@ -11,6 +12,10 @@ const MainPage = () => {
     "Sports & Outdoors",
   ];
 
+  const [data, setData] = useState([]);
+
+  console.log(data);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
     "https://i.postimg.cc/pdCcb9Xk/image.png",
@@ -18,18 +23,33 @@ const MainPage = () => {
     "https://i.postimg.cc/pdCcb9Xk/image.png",
   ];
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/product");
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <Navbar />
       <main>
         <div className="hero">
           <div className="sidebar">
-            <h3>Categories</h3>
+            <h3 className="sidebar-title">Categories</h3>
             <ul>
               {categories.map((category, index) => (
-                <p className="sidebar-category" key={index}>
+                <li className="sidebar-category" key={index}>
                   {category}
-                </p>
+                </li>
               ))}
             </ul>
           </div>
@@ -50,6 +70,29 @@ const MainPage = () => {
                   onClick={() => setCurrentImageIndex(index)}
                 />
               ))}
+            </div>
+          </div>
+        </div>
+        <div className="products">
+          <h3 className="products-title">Products</h3>
+          <div className="products-container">
+            <div className="product">
+              {data.map((product) => {
+                return (
+                  <div className="product-card" key={product.id}>
+                    <img
+                      className="product-image"
+                      src={product.image}
+                      alt={product.name}
+                    />
+                    <h4 className="product-name">{product.name}</h4>
+                    <p className="product-description">{product.description}</p>
+                    <p className="product-price">{product.price}</p>
+                    
+                
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
