@@ -8,6 +8,8 @@ import SignUp from "./components/SignUp";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import { NavLink } from "react-router-dom";
+import Cart from "./components/Cart";
+import Payment from "./components/Payment";
 
 function App() {
   const options = {
@@ -34,6 +36,8 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/payment" element={<Payment />} />
       </Routes>
     </Router>
   );
