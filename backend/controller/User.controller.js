@@ -1,4 +1,4 @@
-const { User } = require('../models/index');
+const { User, Products } = require('../models/index');
 const bcrypt = require("bcrypt");
 const e = require('express');
 const jwt = require("jsonwebtoken");
@@ -184,6 +184,32 @@ module.exports = {
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: true, message: 'Server error' });
+        }
+    },
+    deleteUser: async (req, res) => {
+        const { id } = req.params;
+        try {
+            const user = await User.destroy({ where: { id } });
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            return res.status(204).send(); 
+        } catch (error) {
+            return res.status(500).json({ message: "Error deleting user" });
+        }
+    },
+    getUsersAndSellers: async (req, res) => {
+        try {
+            const users = await User.findAll();
+            const sellers = await User.findAll({
+                where: { role: 'seller' },
+                include: [{ model: Products, as: 'Products' }]
+            });
+
+            return res.json({ users, sellers });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Error fetching users and sellers" });
         }
     }
 };
