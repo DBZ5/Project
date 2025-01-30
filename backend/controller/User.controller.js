@@ -5,45 +5,70 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
     addUser: async (req, res) => {
-        const { fullName, email, password } = req.body;
-        console.log(req.body);
-        // Validate input fields
-        if (!fullName || !email || !password) {
-            return res.status(400).json({ error: true, message: "All fields are required" });
+        try {
+            const { fullName, email, password, role } = req.body;
+
+            if (!fullName || !email || !password) {
+                return res.status(400).json({ 
+                    error: true, 
+                    message: "All fields are required" 
+                });
+            }
+
+            // Check if user already exists
+            const existingUser = await User.findOne({ where: { email } });
+            if (existingUser) {
+                return res.status(400).json({ 
+                    error: true, 
+                    message: "Email already registered" 
+                });
+            }
+
+            // Hash password
+            const hashPassword = await bcrypt.hash(password, 10);
+
+            // Create new user with role
+            const user = await User.create({
+                fullName,
+                email: email.toLowerCase(),
+                password: hashPassword,
+                role: role || 'user'
+            });
+
+            // Generate JWT token
+            const accessToken = jwt.sign(
+                { userId: user.id },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: "72h" }
+            );
+
+            return res.status(201).json({
+                error: false,
+                user: {
+                    fullName: user.fullName,
+                    email: user.email,
+                    role: user.role
+                },
+                accessToken
+            });
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            
+            // Handle Sequelize validation errors
+            if (error.name === 'SequelizeValidationError') {
+                return res.status(400).json({
+                    error: true,
+                    message: error.errors[0].message
+                });
+            }
+
+            // Handle other errors
+            return res.status(500).json({
+                error: true,
+                message: "Server error during registration"
+            });
         }
-
-        // Check if user already exists
-        const isUser = await User.findOne({ where: { email } });
-        if (isUser) {
-            return res.status(400).json({ error: true, message: "User already exists" });
-        }
-
-        // Hash password
-        const hashPassword = await bcrypt.hash(password, 10);
-
-        // Create new user
-        const user = await User.create({
-            fullName,
-            email,
-            password: hashPassword
-        });
-
-        // Generate JWT token
-        const accessToken = jwt.sign(
-            { userId: user.id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "72h" }
-        );
-
-        return res.status(201).json({
-            error: false,
-            user: {
-                fullName: user.fullName,
-                email: user.email
-            },
-            accessToken,
-            message: "Registration successful"
-        });
     },
 
     Login: async (req, res) => {
