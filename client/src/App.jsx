@@ -12,19 +12,8 @@ import MainPage from './components/MainPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from './components/AdminPage';
 import './App.css';
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useSelector } from "react-redux";
-import LoginPage from "./components/Login";
-import SignUp from "./components/SignUp";
-import MainPage from "./components/MainPage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import "./App.css";
+
+
 import Footer from "./components/Footer";
 
 function App() {
