@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const CountdownTimer = () => {
+const CountdownTimer = ({ onCountdownEnd }) => {
   // Initial state to store days, hours, minutes, and seconds
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -8,13 +8,15 @@ const CountdownTimer = () => {
     minutes: 0,
     seconds: 0,
   });
+  const [isCountdownOver, setIsCountdownOver] = useState(false);
+  const timerRef = useRef(null); // Add a ref to store the timer
 
   useEffect(() => {
-    const targetDate = new Date("2025-02-19T00:00:00"); 
+    const targetDate = new Date("2025-02-20T09:25:00");
 
     const calculateTimeLeft = () => {
       const now = new Date();
-      const difference = targetDate - now; 
+      const difference = targetDate - now;
 
       if (difference > 0) {
         // Calculate remaining time
@@ -28,38 +30,42 @@ const CountdownTimer = () => {
       } else {
         // If the countdown is over, set all values to 0
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(timer); // Clear the interval when the countdown ends
+        setIsCountdownOver(true);
+        if (onCountdownEnd) onCountdownEnd();
+        clearInterval(timerRef.current); // Use the ref to clear the interval
       }
     };
 
+    calculateTimeLeft();
     // Update the countdown every second
-    const timer = setInterval(calculateTimeLeft, 1000);
+    timerRef.current = setInterval(calculateTimeLeft, 1000); // Store the timer in the ref
 
     // Cleanup interval on component unmount
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(timerRef.current); // Use the ref to clear the interval
+  }, [onCountdownEnd]);
 
   return (
     <div className="countdown-container">
-        <div className="countdown-item">
-          <p>Days</p>
+      <div className="countdown-item">
+        <p>Days</p>
         <h2 className="countdown-number">{timeLeft.days}</h2>
-        
-        </div> <p className="countdown-separator">:</p>
-        <div className="countdown-item">
-          <p>Hours</p>
+      </div>{" "}
+      <p className="countdown-separator">:</p>
+      <div className="countdown-item">
+        <p>Hours</p>
         <h2 className="countdown-number">{timeLeft.hours}</h2>
-        
-        </div> <p className="countdown-separator">:</p>
-        <div className="countdown-item">
-          <p>Minutes</p>
-          <h2 className="countdown-number">{timeLeft.minutes}</h2>
-        </div> <p className="countdown-separator">:</p>
-        <div className="countdown-item">
-          <p>Seconds</p>
-          <h2 className="countdown-number">{timeLeft.seconds}</h2>
-        </div>
+      </div>{" "}
+      <p className="countdown-separator">:</p>
+      <div className="countdown-item">
+        <p>Minutes</p>
+        <h2 className="countdown-number">{timeLeft.minutes}</h2>
+      </div>{" "}
+      <p className="countdown-separator">:</p>
+      <div className="countdown-item">
+        <p>Seconds</p>
+        <h2 className="countdown-number">{timeLeft.seconds}</h2>
       </div>
+    </div>
   );
 };
 

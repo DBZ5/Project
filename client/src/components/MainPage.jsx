@@ -2,15 +2,43 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import axios from "axios";
 import CountdownTimer from "./Counter";
+import CountUp from "react-countup";
 
 const MainPage = () => {
   const categories = [
-    "Women's Fashion",
-    "Men's Fashion",
-    "Electronics",
-    "Home & Kitchen",
-    "Beauty & Health",
-    "Sports & Outdoors",
+    {
+      name: "Women's Fashion",
+      id: 1,
+      image:
+        "https://api.iconify.design/icon-park-twotone:full-dress-longuette.svg",
+    },
+    {
+      name: "Men's Fashion",
+      id: 2,
+      image: "https://api.iconify.design/fluent:clothes-hanger-16-filled.svg",
+    },
+    {
+      name: "Electronics",
+      id: 3,
+      image: "https://api.iconify.design/line-md:cellphone-twotone.svg",
+    },
+    {
+      name: "Home & Kitchen",
+      id: 4,
+      image:
+        "https://api.iconify.design/streamline:food-kitchenware-fork-spoon-fork-spoon-food-dine-cook-utensils-eat-restaurant-dining.svg",
+    },
+    {
+      name: "Beauty & Health",
+      id: 5,
+      image: "https://api.iconify.design/material-symbols:gfit-health.svg",
+    },
+    {
+      name: "Sports & Outdoors",
+      id: 6,
+      image:
+        "https://api.iconify.design/material-symbols-light:sports-basketball.svg",
+    },
   ];
 
   const [data, setData] = useState([]);
@@ -23,6 +51,8 @@ const MainPage = () => {
     "https://i.postimg.cc/K8LVbXPp/Frame-1.png",
     "https://i.postimg.cc/BQD9S1sC/Frame-2.png",
   ];
+
+  const [isCountdownOver, setIsCountdownOver] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -38,6 +68,16 @@ const MainPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
     <>
       <Navbar />
@@ -46,9 +86,14 @@ const MainPage = () => {
           <div className="sidebar">
             <h3 className="sidebar-title">Categories</h3>
             <ul>
-              {categories.map((category, index) => (
-                <li className="sidebar-category" key={index}>
-                  {category}
+              {categories.map((category) => (
+                <li className="sidebar-category" key={category.id}>
+                  <img
+                    className="sidebar-category-image"
+                    src={category.image}
+                    alt={category.name}
+                  />
+                  <span className="sidebar-category-name">{category.name}</span>
                 </li>
               ))}
             </ul>
@@ -73,12 +118,21 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        <h1 className="products-title">Flash Sales</h1>
-        <CountdownTimer />
+
+        <div className="products-container">
+          <h1 className="products-title">Flash Sales</h1>
+          <CountdownTimer onCountdownEnd={() => setIsCountdownOver(true)} />
+        </div>
+
         <div className="products">
           {data.map((product) => {
             return (
               <div className="product-card" key={product.id}>
+                {!isCountdownOver && (
+                  <div className="product-discount">
+                    <p>50% OFF</p>
+                  </div>
+                )}
                 <img
                   className="product-image"
                   src={product.image}
@@ -89,10 +143,19 @@ const MainPage = () => {
                     <h4 className="product-name">{product.name}</h4>
                     <p className="product-description">{product.description}</p>
                     <div className="product-price-container">
-                      <p className="product-new-price">TND {product.price}</p>
-                      <p className="product-old-price">
-                        TND {product.price * 2}
-                      </p>
+                      {!isCountdownOver ? (
+                        <p className="product-new-price">
+                          TND{" "}
+                          <CountUp
+                            end={product.price / 2}
+                            duration={1}
+                            decimals={2}
+                          />
+                        </p>
+                      ) : (
+                        <p className="product-new-price">TND {product.price}</p>
+                      )}
+                      <p className="product-old-price">TND {product.price}</p>
                     </div>
                   </div>
                   <button className="product-button">
