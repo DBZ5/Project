@@ -7,12 +7,9 @@ const db = require('./models/index');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-const userRoute=require("./router/User.router")
 const productRoute=require("./router/Product.router")
 const wishlistRoute = require("./router/Wishlist.router");
 const userRoute = require('./router/User.router');
-const productRoute = require('./router/Product.router');
 const { handlePayment } = require('./controller/paymentController');
 const contactRoute = require('./router/contactRouter');
 

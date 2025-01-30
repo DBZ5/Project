@@ -15,8 +15,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from './components/AdminPage';
 import Profile from './components/Profile';
 import './App.css';
-
-
 import Footer from "./components/Footer";
 
 function App() {
@@ -25,15 +23,6 @@ function App() {
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Make sure this matches your .env variable
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<MainPage  />} />
-        <Route path="/login" element={<LoginPage  />} />
-        <Route path="/Signup" element={<SignUp  />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-      </Routes>
-    </Router>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Router>
         <Routes>
@@ -52,12 +41,13 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<íAbout />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Router>
       <Footer />
