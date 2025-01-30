@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import './Cart.css'; // Import a CSS file for styling
 import Navbar from "./Navbar";
+import { loadStripe } from '@stripe/stripe-js';
+import axios from 'axios';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([
@@ -25,6 +29,28 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   ) || 0; // Ensure subtotal is 0 if NaN
+
+  const handleCheckout = async () => {
+    try {
+      const stripe = await stripePromise;
+      
+      // Create payment intent
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment`, {
+        amount: subtotal,
+        id: 'your_payment_method_id' // This should come from Stripe Elements
+      });
+
+      if (response.data.success) {
+        alert('Payment successful!');
+        setCartItems([]); // Clear cart after successful payment
+      } else {
+        alert('Payment failed: ' + response.data.message);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Payment failed: ' + error.message);
+    }
+  };
 
   return (
   <>
@@ -65,7 +91,9 @@ const Cart = () => {
         <p>Subtotal: <span className="subtotal-amount">${subtotal}</span></p>
         <p>Shipping: <span className="shipping-amount">Free</span></p>
         <p>Total: <span className="total-amount">${subtotal}</span></p>
-        <button className="checkout-button">Proceed to Checkout</button>
+        <button className="checkout-button" onClick={handleCheckout}>
+          Proceed to Checkout
+        </button>
       </div>
     </div>
     </>

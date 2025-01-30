@@ -1,162 +1,226 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-import { authStart, authSuccess, authFailure } from "../store/authSlice";
-import Navbar from "./Navbar";
-import { useGoogleLogin } from "@react-oauth/google";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
+import { authStart, authSuccess, authFailure } from '../store/authSlice';
+import Navbar from './Navbar';
+import axios from 'axios';
 
-const SignUp = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    role: "user",
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: 'user'
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
-
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigate("/");
-  //   }
-  // }, [isAuthenticated, navigate]);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      dispatch(authFailure('Passwords do not match'));
+      return;
+    }
+
     dispatch(authStart());
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/user/createAccount",
-        formData
-      );
-      dispatch(authSuccess(response.data));
-      navigate("/");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/createAccount`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Signup failed');
+      }
+
+      dispatch(authSuccess(data));
+      navigate('/');
     } catch (err) {
-      dispatch(authFailure(err.response?.data?.message || "Registration failed"));
+      dispatch(authFailure(err.message || 'Signup failed'));
     }
   };
 
-  const handleGoogleSignUp = useGoogleLogin({
+  const handleGoogleSignup = useGoogleLogin({
     onSuccess: async (response) => {
-      if (!response.access_token) {
-        dispatch(authFailure("Google signup failed: No access token"));
-        return;
-      }
-
       dispatch(authStart());
       try {
-        // Get user info from Google
-        const { data: userInfo } = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
+        const userInfo = await axios.get(
+          'https://www.googleapis.com/oauth2/v3/userinfo',
           {
             headers: { Authorization: `Bearer ${response.access_token}` },
           }
         );
 
-        // Send to your backend
-        const backendResponse = await axios.post(
-          "http://127.0.0.1:8000/api/user/googleSignup",
+        const signupResponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
           {
-            email: userInfo.email,
-            fullName: userInfo.name,
-            role: formData.role
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: userInfo.data.email,
+              fullName: userInfo.data.name,
+            }),
           }
         );
 
-        if (backendResponse.data.error) {
-          dispatch(authFailure(backendResponse.data.message));
-          return;
+        const data = await signupResponse.json();
+
+        if (!signupResponse.ok) {
+          throw new Error(data.message || 'Google signup failed');
         }
 
-        dispatch(authSuccess(backendResponse.data));
-        navigate("/");
+        dispatch(authSuccess(data));
+        navigate('/');
       } catch (err) {
-        const errorMessage = err.response?.data?.message || "Google signup failed";
-        dispatch(authFailure(errorMessage));
+        dispatch(authFailure(err.message || 'Google signup failed'));
       }
     },
     onError: () => {
-      dispatch(authFailure("Google signup failed"));
+      dispatch(authFailure('Google signup failed'));
     },
   });
 
   return (
-    <div className="auth-container">
+    <div className="login-page">
       <Navbar />
+      <div className="auth-layout">
+        <div className="auth-image">
+          <img 
+            src="https://sellfy.com/blog/wp-content/uploads/2020/03/add-a-shopping-cart-website.png" 
+            alt="Shopping Cart" 
+            className="login-image"
+          />
+        </div>
+        <div className="auth-form-container">
+          <div className="auth-form-wrapper">
+            <h1>Create an Account</h1>
+            <p className="auth-subtitle">Enter your details below</p>
 
-      <div className="auth-box">
-        <h2>Sign Up</h2>
-        {error && <div className="error-message">{error}</div>}
+            {error && <div className="error-message">{error}</div>}
+            
+            <form onSubmit={handleSubmit} className="auth-form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Full Name"
+                  className="auth-input"
+                />
+              </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name:</label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-            />
+              <div className="form-group">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="Email"
+                  className="auth-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="Password"
+                  className="auth-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  placeholder="Confirm Password"
+                  className="auth-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Role</label>
+                <div className="role-selection">
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="user"
+                      checked={formData.role === 'user'}
+                      onChange={handleChange}
+                    />
+                    User
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="seller"
+                      checked={formData.role === 'seller'}
+                      onChange={handleChange}
+                    />
+                    Seller
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="login-button" disabled={loading}>
+                  {loading ? "Creating Account..." : "Create Account"}
+                </button>
+              </div>
+
+              <button type="button" className="google-button" onClick={() => handleGoogleSignup()}>
+                <img 
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+                  alt="Google" 
+                  className="google-icon"
+                />
+                Sign up with Google
+              </button>
+            </form>
+
+            <p className="auth-link">
+              Already have an account? <Link to="/login">Log in</Link>
+            </p>
           </div>
-
-          <div className="form-group">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Role:</label>
-            <select name="role" value={formData.role} onChange={handleChange} required>
-              <option value="user">User</option>
-              <option value="seller">Seller</option>
-            </select>
-          </div>
-
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? "Signing up..." : "Sign Up"}
-          </button>
-
-          <button type="button" className="google-button" onClick={handleGoogleSignUp}>
-            <img src="/google-icon.svg" alt="Google" />
-            Sign up with Google
-          </button>
-        </form>
-
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default Signup;

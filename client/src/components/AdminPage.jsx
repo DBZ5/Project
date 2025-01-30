@@ -11,7 +11,7 @@ const AdminPage = () => {
     useEffect(() => {
         const fetchUsersAndSellers = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/api/user/usersAndSellers", {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/usersAndSellers`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -39,7 +39,7 @@ const AdminPage = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:8000/api/user/${userId}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/${userId}`);
                 setUsers(users.filter(user => user.id !== userId));
                 Swal.fire('Deleted!', 'User has been deleted.', 'success');
             } catch (error) {
@@ -61,7 +61,7 @@ const AdminPage = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:8000/api/user/${sellerId}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/${sellerId}`);
                 setSellers(sellers.filter(seller => seller.id !== sellerId));
                 Swal.fire('Deleted!', 'Seller has been deleted.', 'success');
             } catch (error) {
@@ -83,7 +83,7 @@ const AdminPage = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:8000/api/product/${productId}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/product/${productId}`);
                 setSellers(sellers.map(seller => ({
                     ...seller,
                     Products: seller.Products.filter(product => product.id !== productId)
@@ -108,7 +108,7 @@ const AdminPage = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.put(`http://localhost:8000/api/user/${userId}`, { role: 'seller' });
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/user/${userId}`, { role: 'seller' });
                 setUsers(users.map(user => 
                     user.id === userId ? { ...user, role: 'seller' } : user
                 ));

@@ -56,10 +56,11 @@ const MainPage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/product");
-      setData(response.data);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/product`);
+      const data = await response.json();
+      setData(data);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching products:", error);
     }
   };
 
