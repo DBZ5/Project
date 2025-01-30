@@ -9,17 +9,23 @@
 
 .auth-box {
   background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  border-radius: 4px;
   width: 100%;
   max-width: 400px;
 }
 
 .auth-box h2 {
-  text-align: center;
+  text-align: left;
+  margin-bottom: 8px;
+  color: #000;
+  font-size: 24px;
+}
+
+.subtitle {
+  color: #666;
   margin-bottom: 24px;
-  color: #333;
+  font-size: 14px;
 }
 
 .form-group {
@@ -35,26 +41,43 @@
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .auth-button {
   width: 100%;
   padding: 12px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 16px;
+  margin-bottom: 12px;
 }
 
-.auth-button:hover {
-  background-color: #45a049;
+.google-button {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  color: #000;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.google-button img {
+  width: 20px;
+  height: 20px;
 }
 
 .auth-button:disabled {
@@ -73,12 +96,11 @@
 
 .auth-link {
   text-align: center;
-  margin-top: 16px;
-  color: #666;
+  font-size: 14px;
 }
 
 .auth-link a {
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
 }
 

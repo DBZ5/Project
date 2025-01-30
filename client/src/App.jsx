@@ -1,30 +1,28 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import axios from "axios";
+
+import About from "./components/About";
+import Contact from "./components/Contact";
+import Cart from "./components/Cart";
+import Payment from "./components/Payment";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import LoginPage from './components/Login';
-import MainPage from "./components/MainPage";
-import Darkmode from "darkmode-js";
 import SignUp from './components/SignUp';
 import ProductDetails from './components/ProductDetails';
 import Wishlist from './components/Wishlist';
+import MainPage from './components/MainPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminPage from './components/AdminPage';
+import Profile from './components/Profile';
+import './App.css';
+
+
+import Footer from "./components/Footer";
 
 function App() {
 
-  const options = {
-    bottom: "64px", // default: '32px'
-    right: "unset", // default: '32px'
-    left: "32px", // default: 'unset'
-    time: "0.5s", // default: '0.3s'
-    mixColor: "#fff", // default: '#fff'
-    backgroundColor: "#fff", // default: '#fff'
-    buttonColorDark: "#100f2c", // default: '#100f2c'
-    buttonColorLight: "#fff", // default: '#fff'
-    saveInCookies: false, // default: true,
-    label: "🌒", // default: ''
-    autoMatchOsTheme: true, // default: true
-  };
-
-  new Darkmode(options).showWidget();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Make sure this matches your .env variable
 
   return (
     <Router>
@@ -36,7 +34,36 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
     </Router>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/profile" element={<Profile />} />
+
+        </Routes>
+      </Router>
+      <Footer />
+    </GoogleOAuthProvider>
   );
 }
 
 export default App;
+ 
