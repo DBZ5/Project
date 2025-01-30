@@ -10,6 +10,7 @@ import LoginPage from './components/Login';
 import SignUp from './components/SignUp';
 import MainPage from './components/MainPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminPage from './components/AdminPage';
 import Profile from './components/Profile';
 import './App.css';
 
@@ -46,6 +47,11 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
@@ -59,3 +65,4 @@ function App() {
 }
 
 export default App;
+ 
