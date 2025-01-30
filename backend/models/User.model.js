@@ -5,14 +5,20 @@ module.exports = (sequelize, DataTypes) => {
         fullName: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true
+          validate: {
+            notEmpty: {
+              msg: "Full name is required"
+            }
+          }
         },
         email: {
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
           validate: {
-            isEmail: true
+            isEmail: {
+              msg: "Please enter a valid email address"
+            }
           }
         },
         password: {
@@ -26,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         role: {
           type: DataTypes.ENUM,
-          values: ['seller','user', 'admin'],
+          values: ['seller', 'user', 'admin'],
           defaultValue: 'user', 
           allowNull: false
         }

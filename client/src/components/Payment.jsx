@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import axios from "axios";
 
-const stripePromise = loadStripe("pk_test_51QmcDbLlLqT9CWcnEzOznx3OiQFUpGQLbuWQ4lEJPRf4MALKDKHNiQpRCRihEm6KLSGd0cuStgzN2J8zvqVK2s2Q003zJDkrTh");
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -23,11 +22,18 @@ const PaymentForm = () => {
     } else {
       const { id } = paymentMethod;
       try {
-        const response = await axios.post("http://localhost:3000/api/payment", {
-          amount: 1000, // Replace with actual amount
-          id,
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: 1000, // Replace with actual amount
+            id,
+          }),
         });
-        if (response.data.success) {
+        const data = await response.json();
+        if (data.success) {
           setSuccess(true);
         }
       } catch (error) {
