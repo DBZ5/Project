@@ -1,24 +1,27 @@
-
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Cart from "./components/Cart";
 import Payment from "./components/Payment";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import LoginPage from './components/Login';
-import SignUp from './components/SignUp';
-import MainPage from './components/MainPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminPage from './components/AdminPage';
-import Profile from './components/Profile';
-import './App.css';
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useSelector } from "react-redux";
+import LoginPage from "./components/Login";
+import SignUp from "./components/SignUp";
+import MainPage from "./components/MainPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminPage from "./components/AdminPage";
+import Profile from "./components/Profile";
+import "./App.css";
+import BestSelling from "./components/bestSelling";
 
 import Footer from "./components/Footer";
 
 function App() {
-
   const { isAuthenticated } = useSelector((state) => state.auth);
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Make sure this matches your .env variable
 
@@ -46,7 +49,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/best-selling" element={<BestSelling />} />
         </Routes>
       </Router>
       <Footer />
@@ -55,4 +58,3 @@ function App() {
 }
 
 export default App;
- 
