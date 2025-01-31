@@ -47,7 +47,8 @@ module.exports = {
                 user: {
                     fullName: user.fullName,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    createdAt: user.createdAt
                 },
                 accessToken
             });
@@ -72,38 +73,50 @@ module.exports = {
     },
 
     Login: async (req, res) => {
-        const { email, password } = req.body;
+        try {
+            const { email, password } = req.body;
+            const user = await User.findOne({ where: { email } });
 
-        // Validate input fields
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
+            if (!user) {
+                return res.status(400).json({ error: true, message: "User not found" });
+            }
+
+            const validPassword = await bcrypt.compare(password, user.password);
+            if (!validPassword) {
+                return res.status(400).json({ error: true, message: "Invalid password" });
+            }
+
+            // Debug logging
+            console.log('Raw user data:', user.toJSON());
+            console.log('CreatedAt value:', user.createdAt);
+
+            const accessToken = jwt.sign(
+                { userId: user.id },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: "72h" }
+            );
+
+            const userData = {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+                createdAt: user.createdAt
+            };
+
+            // Debug logging
+            console.log('Sending user data:', userData);
+
+            return res.json({
+                error: false,
+                message: "Login successful",
+                user: userData,
+                accessToken,
+            });
+        } catch (error) {
+            console.error('Login error:', error);
+            return res.status(500).json({ error: true, message: "Server error" });
         }
-
-        // Find user by email
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(400).json({ message: 'User not found' });
-        }
-
-        // Validate password
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: "Invalid password" });
-        }
-
-        // Generate JWT token
-        const accessToken = jwt.sign(
-            { userId: user.id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '72h' }
-        );
-
-        return res.json({
-            error: false,
-            message: "Login successful",
-            user: { fullName: user.fullName, email: user.email },
-            accessToken,
-        });
     },
 
     getUser: async (req, res) => {
@@ -203,7 +216,13 @@ module.exports = {
             return res.json({
                 error: false,
                 message: "Login successful",
-                user: { fullName: user.fullName, email: user.email, role: user.role },
+                user: {
+                    id: user.id,
+                    fullName: user.fullName,
+                    email: user.email,
+                    role: user.role,
+                    createdAt: user.createdAt
+                },
                 accessToken,
             });
         } catch (error) {
@@ -225,16 +244,31 @@ module.exports = {
     },
     getUsersAndSellers: async (req, res) => {
         try {
-            const users = await User.findAll();
+            const users = await User.findAll({
+                attributes: ['id', 'fullName', 'email', 'role',  'createdAt'],
+                where: { role: 'admin' }
+            });
             const sellers = await User.findAll({
                 where: { role: 'seller' },
-                include: [{ model: Products, as: 'Products' }]
+                include: [{ model: Products, as: 'Products' }],
+                attributes: ['id', 'fullName', 'email', 'role',  'createdAt']
             });
+            
 
             return res.json({ users, sellers });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Error fetching users and sellers" });
+        }
+    },
+    getUsersStatus: async (req, res) => {
+        try {
+            const users = await User.findAll({
+                attributes: ['id', 'fullName', 'isOnline']
+            });
+            res.json(users);
+        } catch (error) {
+            res.status(500).json({ message: "Error fetching user statuses", error });
         }
     }
 };

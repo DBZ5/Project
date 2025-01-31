@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getUser,addUser,Login,googleSignup,LoginwithGoogle,deleteUser,getUsersAndSellers } = require('../controller/User.controller');
+const { getUser,addUser,Login,googleSignup,LoginwithGoogle,deleteUser,getUsersAndSellers, getUsersStatus } = require('../controller/User.controller');
 const  {authenticateToken}= require("../utilities");
 const User = require('../models/User.model');
 
@@ -10,7 +10,8 @@ router.post("/login",Login)
 router.post("/googleSignup",googleSignup)
 router.post("/loginWithGoogle",LoginwithGoogle)
 router.delete("/:id", deleteUser);
-router.get("/usersAndSellers", authenticateToken, getUsersAndSellers);
+router.get("/usersAndSellers", getUsersAndSellers);
+router.get("/statuses", getUsersStatus);
 router.put("/:id", authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { role } = req.body;
