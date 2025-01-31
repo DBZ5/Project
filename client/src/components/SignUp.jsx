@@ -28,13 +28,13 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
-      dispatch(authFailure('Passwords do not match'));
+      dispatch(authFailure("Passwords do not match"));
       return;
     }
 
     dispatch(authStart());
-
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/createAccount`, {
         method: 'POST',
@@ -46,7 +46,7 @@ const Signup = () => {
           email: formData.email,
           password: formData.password,
           role: formData.role
-        })
+        }),
       });
 
       const data = await response.json();
@@ -69,12 +69,14 @@ const Signup = () => {
         const userInfo = await axios.get(
           'https://www.googleapis.com/oauth2/v3/userinfo',
           {
-            headers: { Authorization: `Bearer ${response.access_token}` },
+            headers: { 
+              Authorization: `Bearer ${response.access_token}`
+            },
           }
         );
 
         const signupResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
+          `${import.meta.env.VITE_API_URL}/api/user/googleSignup`,
           {
             method: 'POST',
             headers: {
@@ -83,6 +85,7 @@ const Signup = () => {
             body: JSON.stringify({
               email: userInfo.data.email,
               fullName: userInfo.data.name,
+              role: 'user'
             }),
           }
         );
@@ -96,12 +99,12 @@ const Signup = () => {
         dispatch(authSuccess(data));
         navigate('/');
       } catch (err) {
-        dispatch(authFailure(err.message || 'Google signup failed'));
+        dispatch(authFailure('Google signup failed: ' + err.message));
       }
     },
-    onError: () => {
-      dispatch(authFailure('Google signup failed'));
-    },
+    onError: (error) => {
+      dispatch(authFailure('Google signup failed: ' + error.message));
+    }
   });
 
   return (
