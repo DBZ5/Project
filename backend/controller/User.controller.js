@@ -6,7 +6,10 @@ const jwt = require("jsonwebtoken");
 module.exports = {
     addUser: async (req, res) => {
         try {
-            const { fullName, email, password, role } = req.body;
+            const { fullName, email, password, role, image } = req.body;
+            
+            // If image is not provided, set it to null
+            const userImage = image || null;
 
             if (!fullName || !email || !password) {
                 return res.status(400).json({ 
@@ -32,7 +35,8 @@ module.exports = {
                 fullName,
                 email: email.toLowerCase(),
                 password: hashPassword,
-                role: role || 'user'
+                role: role || 'user',
+                image: userImage
             });
 
             // Generate JWT token
