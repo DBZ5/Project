@@ -1,7 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const db = require("../models");
-const Order = db.Order;
-const OrderItem = db.OrderItem;
+const { User, Order } = require("../models");
+const OrderItem = require("../models").OrderItem;
 
 const handlePayment = async (req, res) => {
   try {
@@ -89,7 +88,7 @@ const getOrderHistory = async (req, res) => {
   try {
     const orders = await Order.findAll({
       where: { userId: req.params.userId },
-      include: [{ model: OrderItem, include: [db.Products] }],
+      include: [{ model: OrderItem, include: [require("../models").Products] }],
       order: [['createdAt', 'DESC']]
     });
     res.json(orders);
@@ -125,4 +124,57 @@ const applyCoupon = async (req, res) => {
   }
 };
 
-module.exports = { handlePayment, getOrderHistory, applyCoupon };
+const createCheckoutSession = async (req, res) => {
+  try {
+    // Verify user is authenticated
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized: Please log in" });
+    }
+
+    // Get user from database
+    const user = await User.findByPk(req.user.userId);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Create Stripe checkout session with billing address collection
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      customer_email: user.email,
+      billing_address_collection: 'required', // Require billing address
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA', 'GB'], // Add countries you want to support
+      },
+      line_items: req.body.items.map(item => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,
+            images: [item.image]
+          },
+          unit_amount: item.price * 100, // Convert to cents
+        },
+        quantity: item.quantity,
+      })),
+      success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.FRONTEND_URL}/cart`,
+      metadata: {
+        userId: user.id,
+      },
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error("Checkout error:", error);
+    if (error.type === 'validation_error') {
+      return res.status(400).json({ 
+        message: error.message,
+        code: error.code
+      });
+    }
+    res.status(500).json({ message: "Error creating checkout session" });
+  }
+};
+
+module.exports = { handlePayment, getOrderHistory, applyCoupon, createCheckoutSession };
