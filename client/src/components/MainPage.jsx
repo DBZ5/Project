@@ -3,6 +3,9 @@ import Navbar from "./Navbar";
 import CountdownTimer from "./Counter";
 import CountUp from "react-countup";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
+import axios from 'axios';
+
 const MainPage = () => {
   const [flash, setFlash] = useState([]);
 
@@ -57,15 +60,22 @@ const MainPage = () => {
 
   const [isCountdownOver, setIsCountdownOver] = useState(false);
 
-  const fetchFlash = async () => {
+  const fetchFlashSales = async () => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/product`
-      );
-      const flash = await response.json();
-      setFlash(flash);
+      console.log('API URL:', process.env.REACT_APP_API_URL);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/flashSales`);
+      if (response.status === 200) {
+        setFlash(response.data);
+      } else {
+        throw new Error('Failed to fetch flash sales');
+      }
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching flash sales:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to fetch flash sales. Please try again later.'
+      });
     }
   };
 
@@ -100,7 +110,7 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    fetchFlash();
+    fetchFlashSales();
     fetchBestSelling();
     fetchAllProducts();
   }, []);

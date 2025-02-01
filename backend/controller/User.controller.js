@@ -105,8 +105,8 @@ module.exports = {
         try {
             const { fullName, email, password, role, image } = req.body;
             
-            // If image is not provided, set it to null
-            const userImage = image || null;
+            // Set default image if not provided
+            const userImage = image || 'default_profile_image_url_here';
 
             if (!fullName || !email || !password) {
                 return res.status(400).json({ 
@@ -179,7 +179,7 @@ module.exports = {
             const user = await User.findOne({ where: { email } });
 
             if (!user) {
-                return res.status(400).json({ error: true, message: "User not found" });
+                return res.status(404).json({ error: true, message: "User not found. Please register." });
             }
 
             const validPassword = await bcrypt.compare(password, user.password);
