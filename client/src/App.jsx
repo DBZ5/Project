@@ -14,7 +14,7 @@ import Profile from './components/Profile';
 import './App.css';
 import Footer from "./components/Footer";
 import AdminRoute from './components/AdminRoute';
-
+import UpdatePassword from './components/UpdatePassword';
 function App() {
 
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -51,6 +51,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
         </Routes>
       </Router>
       <Footer />
