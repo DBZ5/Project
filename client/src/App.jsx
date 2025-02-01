@@ -12,24 +12,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from './components/AdminPage';
 import Profile from './components/Profile';
 import './App.css';
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useSelector } from "react-redux";
-import LoginPage from "./components/Login";
-import SignUp from "./components/SignUp";
-import MainPage from "./components/MainPage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import AdminPage from "./components/AdminPage";
-import Profile from "./components/Profile";
-import "./App.css";
 import BestSelling from "./components/bestSelling";
 import AllProducts from "./components/allProducts";
-
 import Footer from "./components/Footer";
 import AdminRoute from './components/AdminRoute';
 import UpdatePassword from './components/UpdatePassword';
