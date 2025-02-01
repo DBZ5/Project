@@ -43,5 +43,28 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.destroy({ where: { id: req.params.id } });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete product" });
+  }
+};
 
-
+exports.updateProduct = async (req, res) => {
+  try {
+    const product = await Product.update(req.body, {
+      where: { id: req.params.id },
+    });
+    res.status(200).json(product);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update product" });
+  }
+};

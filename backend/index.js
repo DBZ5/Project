@@ -12,14 +12,11 @@ const wishlistRoute = require("./router/Wishlist.router");
 const userRoute = require('./router/User.router');
 const { handlePayment } = require('./controller/paymentController');
 const contactRoute = require('./router/contactRouter');
+const bestSellingRoute = require('./router/bestSelling.router');
+const allProductsRoute = require('./router/allProducts.router');
 
 app.use(express.json())
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
 });
@@ -28,6 +25,8 @@ app.use('/api/product',productRoute)
 app.use('/api/wishlist', wishlistRoute);
 app.post("/api/payment", handlePayment)
 app.use('/api/contact', contactRoute);
+app.use('/api/bestSelling', bestSellingRoute);
+app.use('/api/allProducts', allProductsRoute);
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
