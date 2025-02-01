@@ -13,6 +13,9 @@ db.User = require("./User.model")(sequelize, DataTypes);
 db.Products = require("./Product.model")(sequelize, DataTypes);
 db.BestSelling = require("./bestSelling.model")(sequelize, DataTypes);
 db.AllProducts = require("./allProducts.models")(sequelize, DataTypes);
+db.Order = require("./Order.model")(sequelize, DataTypes);
+db.OrderItem = require("./OrderItem.model")(sequelize, DataTypes);
+
 
 // Define associations
 db.User.hasMany(db.Products, {

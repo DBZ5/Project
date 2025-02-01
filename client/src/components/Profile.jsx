@@ -93,22 +93,31 @@ const Profile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    console.log("slmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",user.id);
+    
     try {
-      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`, profileData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      Swal.fire({
-        icon: 'success',
-        title: 'Profile Updated',
-        text: 'Your profile has been successfully updated.'
-      });
-      setEditMode(false);
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/user/${user.id}`,
+        profileData,
+        config
+      );
+
+      if (response.data) {
+        // Handle successful update
+        console.log('Profile updated successfully:', response.data);
+        Swal.fire('Success!', 'Profile updated successfully', 'success');
+        localStorage.setItem('user', JSON.stringify(response.data));
+        setEditMode(false);
+        dispatch(authSuccess({ user: response.data, token }));
+      }
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Update Failed',
-        text: 'Failed to update profile.'
-      });
+      console.error('Error updating profile:', error);
+      // Handle error (show error message to user)
+      Swal.fire('Error!', error.response?.data?.message || 'Failed to update profile', 'error');
     }
   };
 
@@ -177,7 +186,7 @@ const Profile = () => {
           <div className="profile-actions">
             {editMode ? (
               <>
-                <button className="profile-button save-button" onClick={handleUpdate}>
+                <button className="profile-button save-button" onClick={handleUpdate }>
                   Save Changes
                 </button>
                 <button className="profile-button cancel-button" onClick={() => setEditMode(false)}>
