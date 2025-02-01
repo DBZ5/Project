@@ -9,7 +9,7 @@ const AllProducts = () => {
   const fetchAllProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/allProducts/"
+        "{{ process.env.REACT_APP_API_URL }}/api/allProducts/"
       );
       setAllProducts(response.data);
       setDisplayedProducts(response.data);
