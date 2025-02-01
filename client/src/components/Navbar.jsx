@@ -16,7 +16,7 @@ const Navbar = () => {
 
       <div className="buttons-container">
         <input type="text" placeholder="Search..." className="search-bar" />
-        <button className="nav-buttons">
+        <button className="nav-buttons" onClick={() => navigate("/wishlist")}>
           <svg
             className="nav-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +48,7 @@ const Navbar = () => {
             />
           </svg>
         </button>
+       
       </div>
     </nav>
   );
