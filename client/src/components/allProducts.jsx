@@ -9,7 +9,7 @@ const AllProducts = () => {
   const fetchAllProducts = async () => {
     try {
       const response = await axios.get(
-        "{{ process.env.REACT_APP_API_URL }}/api/allProducts/"
+       ` ${import.meta.env.VITE_API_URL}/api/allProducts/`
       );
       setAllProducts(response.data);
       setDisplayedProducts(response.data);
