@@ -9,8 +9,16 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  margin-top: 3rem;
+  width: 20%;
 }
 
 .role-selection input[type="radio"] {
   margin: 0;
-} 
+  width: 20%;
+  margin-top: 3rem;
+}
+
+.role-selection input[type="radio"]:checked {
+  background-color: #ff5656;
+}
