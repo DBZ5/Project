@@ -19,7 +19,8 @@ db.Products = require("./Product.model")(sequelize, DataTypes);
 db.BestSelling = require("./bestSelling.model")(sequelize, DataTypes);
 db.AllProducts = require("./allProducts.models")(sequelize, DataTypes);
 
-  db.User.hasMany(db.Products, {
+// Define associations
+db.User.hasMany(db.Products, {
   foreignKey: "userId",
   as: "Products",
 });
@@ -34,13 +35,14 @@ db.Products.belongsTo(db.User, {
   as: "user",
 });
 
-db.sequelize
-  .sync({ force: false, alter: false })
+// Remove the duplicate sync calls and use only one
+// Use force: false to prevent dropping tables
+db.sequelize.sync({ force: false } )
   .then(() => {
-    console.log("Database & tables created!");
+    console.log('Database synchronized');
   })
   .catch((err) => {
-    console.error("Error syncing database:", err);
+    console.error('Error synchronizing database:', err);
   });
 
 module.exports = db;

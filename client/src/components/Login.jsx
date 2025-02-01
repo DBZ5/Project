@@ -33,10 +33,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email.toLowerCase(),
-          password: formData.password
-        })
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
@@ -46,7 +43,18 @@ const Login = () => {
       }
 
       dispatch(authSuccess(data));
-      navigate('/');
+      console.log(data , "data");
+      console.log(data.accessToken , "data.access_token");
+      // Navigate based on user role
+      if (data.user.role === 'admin') {
+        console.log(data.accessToken , "data.access_token");
+        
+        localStorage.setItem('token', data.accessToken);
+        navigate('/admin');
+      } else {
+        localStorage.setItem('token', data.accessToken);
+        navigate('/');
+      }
     } catch (err) {
       dispatch(authFailure(err.message || 'Login failed'));
     }
@@ -72,7 +80,6 @@ const Login = () => {
             },
             body: JSON.stringify({
               email: userInfo.data.email,
-              fullName: userInfo.data.name,
             }),
           }
         );
@@ -84,13 +91,16 @@ const Login = () => {
         }
 
         dispatch(authSuccess(data));
-        navigate('/');
+        
+        // Navigate based on user role
+        if (data.user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } catch (err) {
         dispatch(authFailure(err.message || 'Google login failed'));
       }
-    },
-    onError: () => {
-      dispatch(authFailure('Google login failed'));
     },
   });
 
