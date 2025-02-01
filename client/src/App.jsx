@@ -18,6 +18,7 @@ import AdminPage from "./components/AdminPage";
 import Profile from "./components/Profile";
 import "./App.css";
 import BestSelling from "./components/bestSelling";
+import AllProducts from "./components/allProducts";
 
 import Footer from "./components/Footer";
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/best-selling" element={<BestSelling />} />
+          <Route path="/all-products" element={<AllProducts />} />
         </Routes>
       </Router>
       <Footer />

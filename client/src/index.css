@@ -72,6 +72,15 @@ main {
   margin: 0;
 }
 
+.nav-title {
+  color: black;
+  transition: 0.3s;
+}
+
+.nav-title:hover {
+  transform: scale(1.02);
+}
+
 .nav-links {
   display: flex;
   justify-content: space-between;
@@ -335,6 +344,11 @@ main {
   border-radius: 2rem;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.228);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.02);
 }
 
 .product-discount {
@@ -650,7 +664,9 @@ main {
 
 .form-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
+  flex-direction: column;
   align-items: center;
   margin-top: 8px;
 }
@@ -664,6 +680,7 @@ main {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
+  width: 100%;
 }
 
 .login-button:hover {
@@ -908,4 +925,128 @@ hr {
   height: auto;
   border-radius: 1rem;
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Team Section */
+.team-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  margin: 5rem 0;
+}
+
+.team-member {
+  background: white;
+  padding: 6rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.team-member:hover .team-member-img {
+  transform: scale(1.05);
+  transition: 0.3s;
+}
+
+.team-member-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+.team-member h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.team-member p {
+  color: #666;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: #666;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #db4444;
+}
+
+/* Delivery Info Section */
+
+.info-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2rem;
+  margin: 4rem 0;
+}
+
+.info-item {
+  background: #ffffff;
+  padding: 5rem;
+  border-radius: 1rem;
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+
+.info-item svg {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1rem;
+  fill: #ffffff !important;
+  background-color: #000000;
+  border-radius: 50%;
+  padding: 1rem;
+}
+
+.info-item h4 {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.info-item p {
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ALL PRODUCTS PAGE ///////////////////////////////*/
+
+.search-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #e3e3e3;
+  border-radius: 7px;
+  border: none;
+  background-color: rgb(215, 215, 215);
+  margin-right: 2rem;
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+  border: 1px solid lightgray;
+}
+
+.search-input:focus {
+  /* outline: none; */
+  border: 1px solid grey;
 }

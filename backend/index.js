@@ -13,6 +13,7 @@ const productRoute = require('./router/Product.router');
 const { handlePayment } = require('./controller/paymentController');
 const contactRoute = require('./router/contactRouter');
 const bestSellingRoute = require('./router/bestSelling.router');
+const allProductsRoute = require('./router/allProducts.router');
 
 app.use(express.json())
 app.use(cors({
@@ -29,6 +30,7 @@ app.use('/api/product',productRoute)
 app.post("/api/payment", handlePayment)
 app.use('/api/contact', contactRoute);
 app.use('/api/bestSelling', bestSellingRoute);
+app.use('/api/allProducts', allProductsRoute);
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
