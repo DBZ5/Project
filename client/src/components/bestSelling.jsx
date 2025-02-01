@@ -8,7 +8,7 @@ const BestSelling = () => {
   const fetchBestSelling = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/bestSelling/"
+      ` ${import.meta.env.VITE_API_URL}/api/bestSelling/`
       );
       setBestSelling(response.data);
     } catch (error) {
