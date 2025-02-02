@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+import { useSelector } from 'react-redux'; // Import useSelector
 import './Cart.css'; // Import a CSS file for styling
 import Navbar from "./Navbar";
-import { loadStripe } from '@stripe/stripe-js';
-import axios from 'axios';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([
     { id: 1, name: "LCD Monitor", price: 650, quantity: 1 },
     { id: 2, name: "Game Controller", price: 50, quantity: 2 },
   ]);
+
+  const user = useSelector(state => state.auth.user); // Retrieve user from Redux store
 
   const handleQuantityChange = (id, quantity) => {
     setCartItems((prevItems) =>
@@ -22,7 +23,11 @@ const Cart = () => {
 
   const handleCouponApply = () => {
     // Implement coupon logic here
-    alert("Coupon applied!");
+    Swal.fire({
+      icon: 'success',
+      title: 'Coupon Applied',
+      text: 'Coupon code applied successfully!'
+    });
   };
 
   const subtotal = cartItems.reduce(
@@ -30,72 +35,68 @@ const Cart = () => {
     0
   ) || 0; // Ensure subtotal is 0 if NaN
 
-  const handleCheckout = async () => {
-    try {
-      const stripe = await stripePromise;
-      
-      // Create payment intent
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment`, {
-        amount: subtotal,
-        id: 'your_payment_method_id' // This should come from Stripe Elements
-      });
+  const navigate = useNavigate();
 
-      if (response.data.success) {
-        alert('Payment successful!');
-        setCartItems([]); // Clear cart after successful payment
-      } else {
-        alert('Payment failed: ' + response.data.message);
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Payment failed: ' + error.message);
+  const handleCheckout = () => {
+    if (user) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Proceeding to payment',
+        text: 'Redirecting to payment page...'
+      });
+      navigate('/payment');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'Please log in to proceed with the checkout.'
+      });
     }
   };
 
   return (
-  <>
-  <Navbar />
-    <div className="cart-container">
-      
-      <h2 className="cart-title">Your Shopping Cart</h2>
-      <div className="cart-items">
-        {cartItems.map((item) => (
-          <div className="cart-item" key={item.id}>
-            <div className="item-details">
-              <span className="item-name">{item.name}</span>
-              <span className="item-price">${item.price}</span>
-            </div>
-            <div className="item-quantity">
-              <input
-                type="number"
-                value={item.quantity}
-                min="0"
-                onChange={(e) =>
-                  handleQuantityChange(item.id, parseInt(e.target.value))
-                }
-                className="quantity-input"
-              />
-            </div>
-            <span className="item-subtotal">${(item.price * item.quantity).toFixed(2)}</span>
+    <>
+      <Navbar />
+      <div className="cart-page">
+        <div className="cart-container">
+          <div className="cart-items">
+            <h2>Product</h2>
+            {cartItems.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <div className="item-info">
+                  <img src="path_to_lcd_monitor_image.jpg" alt="LCD Monitor" />
+                  <span>{item.name}</span>
+                </div>
+                <span className="price">${item.price}</span>
+                <input
+                  type="number"
+                  value={item.quantity}
+                  min="0"
+                  onChange={(e) =>
+                    handleQuantityChange(item.id, parseInt(e.target.value))
+                  }
+                  className="quantity-input"
+                />
+                <span className="subtotal">${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
           </div>
-
-        ))}
+          <div className="cart-summary">
+            <input type="text" placeholder="Coupon Code" className="coupon-input" />
+            <button className="apply-coupon" onClick={handleCouponApply}>
+              Apply Coupon
+            </button>
+            <div className="total-section">
+              <div><span>Subtotal:</span><span>${subtotal}</span></div>
+              <div><span>Shipping:</span><span>Free</span></div>
+              <div><span>Total:</span><span>${subtotal}</span></div>
+              <button className="checkout-button" onClick={handleCheckout}>
+                Proceed to checkout
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="coupon-section">
-        <input type="text" placeholder="Coupon Code" className="coupon-input" />
-        <button onClick={handleCouponApply} className="coupon-button">
-          Apply Coupon
-        </button>
-      </div>
-      <div className="cart-total">
-        <p>Subtotal: <span className="subtotal-amount">${subtotal}</span></p>
-        <p>Shipping: <span className="shipping-amount">Free</span></p>
-        <p>Total: <span className="total-amount">${subtotal}</span></p>
-        <button className="checkout-button" onClick={handleCheckout}>
-          Proceed to Checkout
-        </button>
-      </div>
-    </div>
     </>
   );
 };

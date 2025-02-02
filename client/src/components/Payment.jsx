@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import Navbar from "./Navbar";
+import Swal from "sweetalert2";
+import './Payment.css';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -9,36 +12,60 @@ const PaymentForm = () => {
   const elements = useElements();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [user, setUser] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardElement),
+
+    if (!stripe || !elements) {
+        // Stripe.js has not loaded yet. Make sure to disable form submission until Stripe.js has loaded.
+        console.log("Stripe not loaded");
+        return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
+    const {error, paymentMethod} = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
     });
 
     if (error) {
-      setError(error.message);
-    } else {
-      const { id } = paymentMethod;
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            amount: 1000, // Replace with actual amount
-            id,
-          }),
+        console.log('[error]', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Error',
+          text: error.message,
+          customClass: {
+            popup: 'swal-wide'
+          }
         });
-        const data = await response.json();
-        if (data.success) {
-          setSuccess(true);
-        }
-      } catch (error) {
-        setError("Payment failed");
-      }
+    } else {
+        console.log('PaymentMethod', paymentMethod);
+        // Trigger the beautiful success alert
+        Swal.fire({
+          title: 'Payment Successful!',
+          text: 'Your transaction has been completed successfully.',
+          icon: 'success',
+          imageUrl: 'https://i.imgur.com/4NZ6uLY.jpg',
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Custom image',
+          background: '#fff url(/images/trees.png)',
+          backdrop: `
+            rgba(0,0,123,0.4)
+            url("https://sweetalert2.github.io/images/nyan-cat.gif")
+            left top
+            no-repeat
+          `,
+          showConfirmButton: true,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Great!',
+          customClass: {
+            popup: 'custom-popup-class'
+          }
+        });
     }
   };
 
@@ -56,9 +83,12 @@ const PaymentForm = () => {
 
 const Payment = () => {
   return (
-    <Elements stripe={stripePromise}>
-      <PaymentForm />
-    </Elements>
+    <>
+      <Navbar />
+      <Elements stripe={stripePromise}>
+        <PaymentForm />
+      </Elements>
+    </>
   );
 };
 

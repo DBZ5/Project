@@ -17,11 +17,13 @@ const authSlice = createSlice({
       state.error = null;
     },
     authSuccess: (state, action) => {
-      state.loading = false;
-      state.isAuthenticated = true;
       state.user = action.payload.user;
-      state.token = action.payload.accessToken;
-      localStorage.setItem('token', action.payload.accessToken);
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+      state.loading = false;
+      state.error = null;
+      localStorage.setItem('user', JSON.stringify(action.payload.user));
+      localStorage.setItem('token', action.payload.token);
     },
     authFailure: (state, action) => {
       state.loading = false;
