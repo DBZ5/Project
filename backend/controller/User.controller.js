@@ -221,18 +221,17 @@ module.exports = {
     },
 
     getUser: async (req, res) => {
-        const { userId } = req.user;
-
-        // Find user by ID
-        const isUser = await User.findOne({ where: { id: userId } });
-        if (!isUser) {
-            return res.sendStatus(401);
+        try {
+            const user = await User.findByPk(req.user.userId, {
+                attributes: ['id', 'fullName', 'email', 'role', 'createdAt']
+            });
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ message: "Error fetching user data" });
         }
-
-        return res.json({
-            user: isUser,
-            message: "",
-        });
     },
 
     googleSignup: async (req, res) => {

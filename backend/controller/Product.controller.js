@@ -1,5 +1,5 @@
 const db = require("../models");
-const Product = db.Product;
+const Product = db.Products;
 
 exports.createProduct = async (req, res) => {
   const product = await Product.create(req.body);
