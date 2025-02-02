@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isUrl: true
+      }
     },
     size: {
       type: DataTypes.ENUM('xs', 's', 'm', 'l', 'xl'),

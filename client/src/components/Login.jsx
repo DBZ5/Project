@@ -28,68 +28,88 @@ const Login = () => {
     e.preventDefault();
     dispatch(authStart());
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, formData);
-      localStorage.setItem('token', data.accessToken);
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'You are now logged in!'
-      });
-      navigate('/');
-    } catch (err) {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, formData);
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      dispatch(authSuccess({ token, user }));
+
+      // Navigate based on user role
+      switch (user.role) {
+        case 'admin':
+          navigate('/admin');
+          break;
+        case 'seller':
+          navigate('/seller');
+          break;
+        default:
+          navigate('/');
+          break;
+      }
+
+    } catch (error) {
+      dispatch(authFailure(error.response?.data?.message || 'Login failed'));
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
-        text: err.message || 'Incorrect email or password'
+        text: error.response?.data?.message || 'Invalid credentials'
       });
-      dispatch(authFailure(err.message || 'Login failed'));
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (response) => {
-      dispatch(authStart());
-      try {
-        const userInfo = await axios.get(
-          'https://www.googleapis.com/oauth2/v3/userinfo',
-          {
-            headers: { Authorization: `Bearer ${response.access_token}` },
-          }
-        );
 
-        const loginResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: userInfo.data.email,
-            }),
-          }
-        );
-
-        const data = await loginResponse.json();
-
-        if (!loginResponse.ok) {
-          throw new Error(data.message || 'Google login failed');
+const handleGoogleLogin = useGoogleLogin({
+  onSuccess: async (response) => {
+    dispatch(authStart());
+    try {
+      const userInfo = await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+          },
         }
+      );
 
-        dispatch(authSuccess(data));
-        
-        // Navigate based on user role
-        if (data.user.role === 'admin') {
+      const googleLoginResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
+        {
+          email: userInfo.data.email,
+          fullName: userInfo.data.name,
+        }
+      );
+
+      const { token, user } = googleLoginResponse.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      dispatch(authSuccess({ token, user }));
+
+      // Navigate based on user role
+      switch (user.role) {
+        case 'admin':
           navigate('/admin');
-        } else {
+          break;
+        case 'seller':
+          navigate('/seller');
+          break;
+        default:
           navigate('/');
-        }
-      } catch (err) {
-        dispatch(authFailure(err.message || 'Google login failed'));
+          break;
       }
-    },
-  });
 
+    } catch (error) {
+      dispatch(authFailure(error.message || 'Google login failed'));
+    }
+  },
+  onError: (error) => {
+    dispatch(authFailure('Google login failed'));
+    console.error('Google Login Error:', error);
+  },
+});
   return (
     <div className="login-page">
       <Navbar />

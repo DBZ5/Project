@@ -20,6 +20,7 @@ import Footer from "./components/Footer";
 import AdminRoute from './components/AdminRoute';
 import UpdatePassword from './components/UpdatePassword';
 import SellerPage from './components/sellerpage';
+import SellerRoute from './components/SellerRoute';
 
 function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -40,13 +41,21 @@ function App() {
             }
           />
           <Route 
-            path="/admin" 
-            element={
-              <AdminRoute>
-                <AdminPage />
-              </AdminRoute>
-            } 
-          />
+        path="/admin" 
+        element={
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
+        } 
+      />
+      <Route 
+        path="/seller" 
+        element={
+          <SellerRoute>
+            <SellerPage />
+          </SellerRoute>
+        } 
+      />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
