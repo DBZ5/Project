@@ -3,51 +3,54 @@ import Navbar from "./Navbar";
 import CountdownTimer from "./Counter";
 import CountUp from "react-countup";
 import { Link } from "react-router-dom";
+
 const MainPage = () => {
   const [flash, setFlash] = useState([]);
-
   const [bestSelling, setBestSelling] = useState([]);
-
   const [allProducts, setAllProducts] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const categories = [
     {
       name: "Women's Fashion",
+      query: "Women",
       id: 1,
       image:
         "https://api.iconify.design/icon-park-twotone:full-dress-longuette.svg",
     },
     {
       name: "Men's Fashion",
+      query: "Men",
       id: 2,
       image: "https://api.iconify.design/fluent:clothes-hanger-16-filled.svg",
     },
     {
       name: "Electronics",
+      query: "Electronics",
       id: 3,
       image: "https://api.iconify.design/line-md:cellphone-twotone.svg",
     },
     {
       name: "Home & Kitchen",
+      query: "Home",
       id: 4,
       image:
         "https://api.iconify.design/streamline:food-kitchenware-fork-spoon-fork-spoon-food-dine-cook-utensils-eat-restaurant-dining.svg",
     },
     {
       name: "Beauty & Health",
+      query: "Beauty",
       id: 5,
       image: "https://api.iconify.design/material-symbols:gfit-health.svg",
     },
     {
       name: "Sports & Outdoors",
+      query: "Sports",
       id: 6,
       image:
         "https://api.iconify.design/material-symbols-light:sports-basketball.svg",
     },
   ];
-
-  console.log(flash);
 
   const images = [
     "https://i.postimg.cc/wBKJYLWd/image.png",
@@ -114,14 +117,21 @@ const MainPage = () => {
             <h3 className="sidebar-title">Categories</h3>
             <ul>
               {categories.map((category) => (
-                <li className="sidebar-category" key={category.id}>
-                  <img
-                    className="sidebar-category-image"
-                    src={category.image}
-                    alt={category.name}
-                  />
-                  <span className="sidebar-category-name">{category.name}</span>
-                </li>
+                <Link
+                  to={`/all-products?category=${category.query}`}
+                  key={category.id}
+                >
+                  <li className="sidebar-category">
+                    <img
+                      className="sidebar-category-image"
+                      src={category.image}
+                      alt={category.name}
+                    />
+                    <span className="sidebar-category-name">
+                      {category.name}
+                    </span>
+                  </li>
+                </Link>
               ))}
             </ul>
           </div>
