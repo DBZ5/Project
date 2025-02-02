@@ -18,6 +18,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    category: {
+      type: DataTypes.ENUM,
+      values: [
+        "Men",
+        "Women",
+        "Electronics",
+        "Home",
+        "Beauty",
+        "Sports",
+      ],
+      allowNull: true,
+    },
   });
   return AllProducts;
 };

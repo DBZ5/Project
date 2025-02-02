@@ -7,8 +7,8 @@ const getAllProducts = async (req, res) => {
 };
 
 const postAllProducts = async (req, res) => {
-  const { name, price, description, image } = req.body;
-  const allProducts = await AllProducts.create({ name, price, description, image });
+  const { name, price, description, image, category } = req.body;
+  const allProducts = await AllProducts.create({ name, price, description, image, category });
   res.json(allProducts);
 };
 
@@ -20,8 +20,8 @@ const deleteAllProducts = async (req, res) => {
 
 const updateAllProducts = async (req, res) => {
   const { id } = req.params;
-  const { name, price, description, image } = req.body;
-  const allProducts = await AllProducts.update({ name, price, description, image }, { where: { id } });
+  const { name, price, description, image, category } = req.body;
+  const allProducts = await AllProducts.update({ name, price, description, image, category }, { where: { id } });
   res.json(allProducts);
 };
 

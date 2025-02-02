@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const categories = [
+    "Women's Fashion",
+    "Men's Fashion",
+    "Electronics",
+    "Home & Kitchen",
+    "Beauty & Health",
+    "Sports & Outdoors",
+  ];
 
   const fetchAllProducts = async () => {
     try {
@@ -31,9 +44,43 @@ const AllProducts = () => {
     }
   };
 
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+
+    // Update the URL with the selected category
+    navigate(`/all-products?category=${category}`);
+
+    // Filter products based on the selected category
+    if (category === "") {
+      setDisplayedProducts(allProducts);
+    } else {
+      const filteredProducts = allProducts.filter(
+        (product) => product.category === category
+      );
+      setDisplayedProducts(filteredProducts);
+    }
+  };
+
   useEffect(() => {
     fetchAllProducts();
   }, []);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const category = queryParams.get("category");
+
+    if (category) {
+      setSelectedCategory(category);
+      const filteredProducts = allProducts.filter(
+        (product) => product.category === category
+      );
+      setDisplayedProducts(filteredProducts);
+    } else {
+      setSelectedCategory("");
+      setDisplayedProducts(allProducts);
+    }
+  }, [location.search, allProducts]);
 
   return (
     <>
@@ -62,6 +109,7 @@ const AllProducts = () => {
                   <p className="product-description">{product.description}</p>
                   <div className="product-price-container">
                     <p className="product-new-price">TND {product.price}</p>
+                    <p className="product-category">{product.category}</p>
                   </div>
                 </div>
                 <button className="product-button">
