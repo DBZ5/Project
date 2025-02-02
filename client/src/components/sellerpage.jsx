@@ -11,32 +11,44 @@ const SellerPage = () => {
         price: '',
         description: '',
         image: null,
+        category: ''
     });
     const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProductData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        setProductData({
+            ...productData,
+            [name]: value
+        });
     };
 
     const handleImageChange = (e) => {
-        setProductData((prevData) => ({
-            ...prevData,
-            image: e.target.files[0],
-        }));
+        setProductData({
+            ...productData,
+            image: e.target.files[0]
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('name', productData.name);
+        formData.append('price', productData.price);
+        formData.append('description', productData.description);
+        formData.append('image', productData.image);
+        formData.append('category', productData.category);
+
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/product`, productData);
+            const response = await axios.post('http://localhost:8000/api/product', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             dispatch(addProduct(response.data));
             setProducts([...products, response.data]);
-            setProductData({ name: '', price: '', description: '', image: null });
+            setProductData({ name: '', price: '', description: '', image: null, category: '' });
         } catch (error) {
             console.error('Error adding product:', error);
         }
@@ -87,6 +99,15 @@ const SellerPage = () => {
                     type="file"
                     name="image"
                     onChange={handleImageChange}
+                    required
+                />
+                <input
+                    type="text"
+                    name="category"
+                    placeholder="Category"
+                    value={productData.category}
+                    onChange={handleChange}
+                    required
                 />
                 <button type="submit">Add Product</button>
             </form>
