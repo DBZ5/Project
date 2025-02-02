@@ -19,6 +19,8 @@ import AllProducts from "./components/allProducts";
 import Footer from "./components/Footer";
 import AdminRoute from './components/AdminRoute';
 import UpdatePassword from './components/UpdatePassword';
+import SellerPage from './components/sellerpage';
+
 function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Make sure this matches your .env variable
@@ -55,6 +57,7 @@ function App() {
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/best-selling" element={<BestSelling />} />
           <Route path="/all-products" element={<AllProducts />} />
+          <Route path="/seller" element={<SellerPage />} />
         </Routes>
       </Router>
       <Footer />

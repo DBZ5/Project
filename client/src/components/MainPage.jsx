@@ -3,8 +3,13 @@ import Navbar from "./Navbar";
 import CountdownTimer from "./Counter";
 import CountUp from "react-countup";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProductsStart, fetchProductsSuccess, fetchProductsFailure } from '../store/productSlice';
+import axios from 'axios';
 
 const MainPage = () => {
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
   const [flash, setFlash] = useState([]);
   const [bestSelling, setBestSelling] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
@@ -102,10 +107,21 @@ const MainPage = () => {
     setAllProducts(allProducts);
   };
 
+  const fetchProducts = async () => {
+    dispatch(fetchProductsStart());
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/allProducts`);
+      dispatch(fetchProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(fetchProductsFailure(error.message));
+    }
+  };
+
   useEffect(() => {
     fetchFlash();
     fetchBestSelling();
     fetchAllProducts();
+    fetchProducts();
   }, []);
 
   return (
@@ -162,7 +178,7 @@ const MainPage = () => {
         </div>
 
         <div className="products">
-          {flash.map((product) => (
+          {Array.isArray(flash) && flash.map((product) => (
             <Link to={`/product/${product.id}`} key={product.id} className="product-link">
               <div className="product-card">
                 {!isCountdownOver && (
@@ -272,7 +288,7 @@ const MainPage = () => {
           </div>
         </div>
         <div className="products">
-          {allProducts.slice(0, 3).map((product) => (
+          {products.slice(0, 3).map((product) => (
             <Link to={`/product/${product.id}`} key={product.id} className="product-link">
               <div className="product-card">
                 <img
