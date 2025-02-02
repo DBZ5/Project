@@ -1,9 +1,30 @@
 const db = require("../models");
 const Product = db.Products;
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 exports.createProduct = async (req, res) => {
-  const product = await Product.create(req.body);
-  res.status(201).json(product);
+  try {
+    const { name, price, description, image, category } = req.body;
+
+    // Validate input data
+    if (!name || !price) {
+      return res.status(400).json({ message: "Name and price are required." });
+    }
+
+    const newProduct = await Product.create({
+      name,
+      price,
+      description,
+      image,
+      category,
+    });
+
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ message: "Failed to add product", error: error.message });
+  }
 };
 
 exports.getAllProducts = async (req, res) => {
