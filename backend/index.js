@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 app.use('/api/user',userRoute)
 app.use('/api/product',productRoute)
 app.use('/api/wishlist', wishlistRoute);
-app.post("/api/payment", handlePayment)
+app.post("/api/payment", handlePayment);
 app.use('/api/contact', contactRoute);
 app.use('/api/bestSelling', bestSellingRoute);
 app.use('/api/allProducts', allProductsRoute);
