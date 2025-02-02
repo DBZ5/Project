@@ -5,6 +5,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { authStart, authSuccess, authFailure } from '../store/authSlice';
 import Navbar from './Navbar';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,36 +27,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(authStart());
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, formData);
+      localStorage.setItem('token', data.accessToken);
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You are now logged in!'
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      dispatch(authSuccess(data));
-      console.log(data , "data");
-      console.log(data.accessToken , "data.access_token");
-      // Navigate based on user role
-      if (data.user.role === 'admin') {
-        console.log(data.accessToken , "data.access_token");
-        
-        localStorage.setItem('token', data.accessToken);
-        navigate('/admin');
-      } else {
-        localStorage.setItem('token', data.accessToken);
-        navigate('/');
-      }
+      navigate('/');
     } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: err.message || 'Incorrect email or password'
+      });
       dispatch(authFailure(err.message || 'Login failed'));
     }
   };

@@ -1,0 +1,9 @@
+.custom-popup-class {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+.swal-wide{
+    width:600px !important;
+}

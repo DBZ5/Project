@@ -1,24 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
-const sequelize = new Sequelize(
-  process.env.DATABASE,
-  process.env.USER,
-  process.env.PASSWORD,
-  {
-    host: "localhost",
-    dialect: "mysql",
-    logging: console.log
-  }
-);
-
-// Test the connection
-sequelize.authenticate()
-  .then(() => {
-    console.log('Database connection established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// Create Sequelize connection
+// const mysqlConfig=require("../config")
+const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD, {
+  host: "localhost",
+  dialect: "mysql",
+});
 
 const db = {};
 db.sequelize = sequelize;
@@ -29,6 +15,9 @@ db.Products = require("./Product.model")(sequelize, DataTypes);
 db.Favorite = require("./Wishlist.model")(sequelize, DataTypes);
 db.BestSelling = require("./bestSelling.model")(sequelize, DataTypes);
 db.AllProducts = require("./allProducts.models")(sequelize, DataTypes);
+db.Order = require("./Order.model")(sequelize, DataTypes);
+db.OrderItem = require("./OrderItem.model")(sequelize, DataTypes);
+
 
 // User - Product relationship (for products created by users/sellers)
 // Define associations
@@ -79,7 +68,7 @@ sequelize.sync()
 
 // Remove the duplicate sync calls and use only one
 // Use force: false to prevent dropping tables
-db.sequelize.sync({ force: false } )
+db.sequelize.sync({ force: false , alter: true } )
   .then(() => {
     console.log('Database synchronized');
   })
