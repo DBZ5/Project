@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useSelector } from 'react-redux';
 import LoginPage from './components/Login';
 import SignUp from './components/SignUp';
+import ProductDetails from './components/ProductDetails';
+import Wishlist from './components/Wishlist';
 import MainPage from './components/MainPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from './components/AdminPage';
@@ -44,10 +46,11 @@ function App() {
             } 
           />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/best-selling" element={<BestSelling />} />
           <Route path="/all-products" element={<AllProducts />} />
