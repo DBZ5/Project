@@ -3,28 +3,29 @@ const Product = db.Products;
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-exports.createProduct = [
-    upload.single('image'), 
-    async (req, res) => {
-        try {
-            const productData = {
-                name: req.body.name,
-                price: req.body.price,
-                description: req.body.description,
-                image: req.file.path, 
-            };
-            const product = await Product.create(productData);
-            
-            // Notify admin (this could be a database entry or an event)
-            console.log(`New product added: ${product.name} by seller ID: ${req.user.id}`);
+exports.createProduct = async (req, res) => {
+  try {
+    const { name, price, description, image, category } = req.body;
 
-            res.status(201).json(product);
-        } catch (error) {
-            console.error('Error creating product:', error);
-            res.status(500).json({ message: "Error creating product" });
-        }
+    // Validate input data
+    if (!name || !price) {
+      return res.status(400).json({ message: "Name and price are required." });
     }
-];
+
+    const newProduct = await Product.create({
+      name,
+      price,
+      description,
+      image,
+      category,
+    });
+
+    res.status(201).json(newProduct);
+  } catch (error) {
+    console.error("Error adding product:", error);
+    res.status(500).json({ message: "Failed to add product", error: error.message });
+  }
+};
 
 exports.getAllProducts = async (req, res) => {
   try {

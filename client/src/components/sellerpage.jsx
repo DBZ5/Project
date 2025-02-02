@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import './sellerpage.css'; // Import the CSS file for styling
+import { useDispatch } from 'react-redux';
+import { addProduct } from '../store/productSlice';
 
 const SellerPage = () => {
     const [productData, setProductData] = useState({
@@ -11,6 +13,7 @@ const SellerPage = () => {
         image: null,
     });
     const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,32 +32,19 @@ const SellerPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('name', productData.name);
-        formData.append('price', productData.price);
-        formData.append('description', productData.description);
-        formData.append('image', productData.image);
-
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/product`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            fetchProducts(); // Refresh the product list after adding a new product
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/product`, productData);
+            dispatch(addProduct(response.data));
+            setProducts([...products, response.data]);
+            setProductData({ name: '', price: '', description: '', image: null });
         } catch (error) {
-            console.error('Error creating product:', error);
+            console.error('Error adding product:', error);
         }
     };
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/product`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/product`);
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -93,8 +83,12 @@ const SellerPage = () => {
                     onChange={handleChange}
                     required
                 />
-                <input type="file" onChange={handleImageChange} required />
-                <button type="submit">Create Product</button>
+                <input
+                    type="file"
+                    name="image"
+                    onChange={handleImageChange}
+                />
+                <button type="submit">Add Product</button>
             </form>
             <h2>My Products</h2>
             <ul className="product-list">
