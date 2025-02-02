@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import './ProductDetails.css';
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../store/cartSlice';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -119,6 +120,22 @@ const ProductDetails = () => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (product) {
+      const cartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: quantity,
+        size: selectedSize,
+        image: product.image
+      };
+      
+      dispatch(addToCart(cartItem));
+      navigate('/cart');
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!product) return <div>Product not found</div>;
@@ -187,7 +204,7 @@ const ProductDetails = () => {
                 </button>
               </div>
 
-              <button className="buy-now-btn">Buy Now</button>
+              <button className="buy-now-btn" onClick={handleBuyNow}>Buy Now</button>
               <button 
                 className={`wishlist-btn ${isInWishlist ? 'active' : ''}`}
                 onClick={handleWishlistToggle}

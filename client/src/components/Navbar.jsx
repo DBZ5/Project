@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Navbar.css";
+import Swal from 'sweetalert2';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -47,6 +48,26 @@ const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => setShowDropdown(!showDropdown);
+
+  const handleLogout = () => {
+    // Remove token and user data from localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    // Redirect to login page
+    navigate('/login');
+    
+    // Optional: Show success message
+    Swal.fire({
+      icon: 'success',
+      title: 'Logged out successfully',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    
+    // Close dropdown
+    setShowDropdown(false);
+  };
 
   return (
     <nav>
@@ -132,7 +153,7 @@ const Navbar = () => {
             <div className="dropdown-item" onClick={() => navigate("/wishlist")}>My wishlist</div>
             <div className="dropdown-item">My Cancellations</div>
             <div className="dropdown-item">My Reviews</div>
-            <div className="dropdown-item">Logout</div>
+            <div className="dropdown-item" onClick={handleLogout}>Logout</div>
           </div>
         )}
       </div>

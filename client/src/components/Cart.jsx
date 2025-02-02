@@ -1,24 +1,19 @@
-import React, { useState } from "react";
-import { useSelector } from 'react-redux'; // Import useSelector
+import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import './Cart.css'; // Import a CSS file for styling
 import Navbar from "./Navbar";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { updateQuantity, removeFromCart } from '../store/cartSlice';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "LCD Monitor", price: 650, quantity: 1 },
-    { id: 2, name: "Game Controller", price: 50, quantity: 2 },
-  ]);
-
-  const user = useSelector(state => state.auth.user); // Retrieve user from Redux store
+  const cartItems = useSelector(state => state.cart.items);
+  const user = useSelector(state => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleQuantityChange = (id, quantity) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-      )
-    );
+    dispatch(updateQuantity({ id, quantity }));
   };
 
   const handleCouponApply = () => {
@@ -35,10 +30,10 @@ const Cart = () => {
     0
   ) || 0; // Ensure subtotal is 0 if NaN
 
-  const navigate = useNavigate();
-
   const handleCheckout = () => {
-    if (user) {
+    // Check both Redux state and localStorage for auth
+    const token = localStorage.getItem('token');
+    if (user || token) {
       Swal.fire({
         icon: 'success',
         title: 'Proceeding to payment',
@@ -62,16 +57,19 @@ const Cart = () => {
           <div className="cart-items">
             <h2>Product</h2>
             {cartItems.map((item) => (
-              <div className="cart-item" key={item.id}>
+              <div className="cart-item" key={`${item.id}-${item.size}`}>
                 <div className="item-info">
-                  <img src="path_to_lcd_monitor_image.jpg" alt="LCD Monitor" />
-                  <span>{item.name}</span>
+                  <img src={item.image} alt={item.name} />
+                  <div>
+                    <span>{item.name}</span>
+                    {item.size && <span className="item-size">Size: {item.size}</span>}
+                  </div>
                 </div>
                 <span className="price">${item.price}</span>
                 <input
                   type="number"
                   value={item.quantity}
-                  min="0"
+                  min="1"
                   onChange={(e) =>
                     handleQuantityChange(item.id, parseInt(e.target.value))
                   }
