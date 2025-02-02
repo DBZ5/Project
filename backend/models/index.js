@@ -57,14 +57,6 @@ db.Favorite.belongsTo(db.Products, {
   as: 'product'
 });
 
-// Sync all models with the database
-sequelize.sync()
-  .then(() => {
-    console.log('Database & tables created!');
-  })
-  .catch(err => {
-    console.error('Error syncing database:', err);
-  });
 
 // Remove the duplicate sync calls and use only one
 // Use force: false to prevent dropping tables
