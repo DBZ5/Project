@@ -173,51 +173,47 @@ module.exports = {
         }
     },
 
-    Login: async (req, res) => {
-        try {
-            const { email, password } = req.body;
-            const user = await User.findOne({ where: { email } });
+    // backend/controller/User.controller.js
 
-            if (!user) {
-                return res.status(404).json({ error: true, message: "User not found. Please register." });
-            }
-
-            const validPassword = await bcrypt.compare(password, user.password);
-            if (!validPassword) {
-                return res.status(400).json({ error: true, message: "Invalid password" });
-            }
-
-            // Debug logging
-            console.log('Raw user data:', user.toJSON());
-            console.log('CreatedAt value:', user.createdAt);
-
-            const accessToken = jwt.sign(
-                { userId: user.id },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "72h" }
-            );
-
-            const userData = {
-                id: user.id,
-                fullName: user.fullName,
-                email: user.email,
-                role: user.role,
-                createdAt: user.createdAt
-            };
-
-            // Debug logging
-            console.log('Sending user data:', userData);
-
-            return res.json({
-                error: false,
-                message: "Login successful",
-                user: userData,
-                accessToken,
-            });
-        } catch (error) {
-            console.error('Login error:', error);
-            return res.status(500).json({ error: true, message: "Server error" });
+Login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ where: { email } });
+  
+      if (!user) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+  
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+  
+      const accessToken = jwt.sign(
+        { 
+          userId: user.id,
+          role: user.role // Include role in token
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: '24h' }
+      );
+  
+      res.json({
+        token: accessToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role, // Make sure to include role
+          image: user.image
         }
+      });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error logging in" });
+    }
+  
     },
 
     getUser: async (req, res) => {

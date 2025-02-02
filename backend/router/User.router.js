@@ -15,6 +15,6 @@ router.get("/statuses", getUsersStatus);
 router.put("/:id", authenticateToken, updateUser);
 router.post("/forgot-password", forgotPassword);
 router.get("/verify-reset-token",verifyResetToken);
-// router.put('/update-password', updatePassword);
+router.put('/update/update-password', updatePassword);
 
 module.exports = router;

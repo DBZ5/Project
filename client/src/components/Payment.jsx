@@ -12,21 +12,18 @@ const PaymentForm = () => {
   const elements = useElements();
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [user, setUser] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
-        // Stripe.js has not loaded yet. Make sure to disable form submission until Stripe.js has loaded.
         console.log("Stripe not loaded");
         return;
     }
 
     const cardElement = elements.getElement(CardElement);
 
-    const {error, paymentMethod} = await stripe.createPaymentMethod({
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
     });
@@ -43,7 +40,6 @@ const PaymentForm = () => {
         });
     } else {
         console.log('PaymentMethod', paymentMethod);
-        // Trigger the beautiful success alert
         Swal.fire({
           title: 'Payment Successful!',
           text: 'Your transaction has been completed successfully.',
@@ -70,14 +66,23 @@ const PaymentForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe}>
-        Pay
-      </button>
-      {error && <div>{error}</div>}
-      {success && <div>Payment Successful!</div>}
-    </form>
+    <div className="payment-container">
+      <div className="card-preview">
+        <div className="card">
+          <div className="card-details">
+          </div>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} className="payment-form">
+        <h2>Payment Details</h2>
+        <CardElement className="card-input" />
+        <button type="submit" disabled={!stripe} className="pay-button">
+          Confirm
+        </button>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">Payment Successful!</div>}
+      </form>
+    </div>
   );
 };
 
