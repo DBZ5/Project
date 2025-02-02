@@ -289,6 +289,7 @@ module.exports = {
                 accessToken
             });
         } catch (error) {
+            throw error
             console.error(error);
             res.status(500).json({ error: true, message: 'Server error' });
         }

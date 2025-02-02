@@ -7,9 +7,9 @@ const db = require('./models/index');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
+const productRoute=require("./router/Product.router")
+const wishlistRoute = require("./router/Wishlist.router");
 const userRoute = require('./router/User.router');
-const productRoute = require('./router/Product.router');
 const { handlePayment } = require('./controller/paymentController');
 const contactRoute = require('./router/contactRouter');
 const bestSellingRoute = require('./router/bestSelling.router');
@@ -23,7 +23,8 @@ app.get('/', (req, res) => {
 });
 app.use('/api/user', userRoute)
 app.use('/api/product',productRoute)
-app.post("/api/payment", handlePayment)
+app.use('/api/wishlist', wishlistRoute);
+app.post("/api/payment", handlePayment);
 app.use('/api/contact', contactRoute);
 app.use('/api/bestSelling', bestSellingRoute);
 app.use('/api/allProducts', allProductsRoute);
