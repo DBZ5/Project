@@ -162,9 +162,9 @@ const MainPage = () => {
         </div>
 
         <div className="products">
-          {flash.map((product) => {
-            return (
-              <div className="product-card" key={product.id}>
+          {flash.map((product) => (
+            <Link to={`/product/${product.id}`} key={product.id} className="product-link">
+              <div className="product-card">
                 {!isCountdownOver && (
                   <div className="product-discount">
                     <p>50% OFF</p>
@@ -213,8 +213,8 @@ const MainPage = () => {
                   </button>
                 </div>
               </div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
 
         <div className="best-selling-products-container">
@@ -226,9 +226,9 @@ const MainPage = () => {
           </div>
         </div>
         <div className="products">
-          {bestSelling.slice(0, 3).map((product) => {
-            return (
-              <div className="product-card" key={product.id}>
+          {bestSelling.slice(0, 3).map((product) => (
+            <Link to={`/product/${product.id}`} key={product.id} className="product-link">
+              <div className="product-card">
                 <img
                   className="product-image"
                   src={product.image}
@@ -259,8 +259,8 @@ const MainPage = () => {
                   </button>
                 </div>
               </div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
 
         <div className="best-selling-products-container">
@@ -272,9 +272,9 @@ const MainPage = () => {
           </div>
         </div>
         <div className="products">
-          {allProducts.slice(0, 3).map((product) => {
-            return (
-              <div className="product-card" key={product.id}>
+          {allProducts.slice(0, 3).map((product) => (
+            <Link to={`/product/${product.id}`} key={product.id} className="product-link">
+              <div className="product-card">
                 <img
                   className="product-image"
                   src={product.image}
@@ -305,8 +305,8 @@ const MainPage = () => {
                   </button>
                 </div>
               </div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
       </main>
     </>

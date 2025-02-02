@@ -45,6 +45,7 @@ function App() {
               </AdminRoute>
             } 
           />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />

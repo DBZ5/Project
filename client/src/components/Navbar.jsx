@@ -129,7 +129,7 @@ const Navbar = () => {
         {showDropdown && (
           <div className="dropdown-menu">
             <div className="dropdown-item" onClick={() => navigate("/profile")}>Manage My Account</div>
-            <div className="dropdown-item">My Order</div>
+            <div className="dropdown-item" onClick={() => navigate("/wishlist")}>My wishlist</div>
             <div className="dropdown-item">My Cancellations</div>
             <div className="dropdown-item">My Reviews</div>
             <div className="dropdown-item">Logout</div>

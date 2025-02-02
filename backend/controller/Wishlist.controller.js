@@ -1,14 +1,9 @@
-const { Favorite, Products, User } = require('../models/index');
+const { Favorite, Products } = require('../models/index');
 
 module.exports = {
   getWishlist: async (req, res) => {
     try {
-      if (!req.user || !req.user.id) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-
       const wishlistItems = await Favorite.findAll({
-        where: { userId: req.user.id },
         include: [{
           model: Products,
           as: 'product',
@@ -42,34 +37,9 @@ module.exports = {
     }
   },
 
-  checkWishlistItem: async (req, res) => {
-    try {
-      if (!req.user || !req.user.id) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-
-      const { productId } = req.params;
-      const userId = req.user.id;
-      
-      const item = await Favorite.findOne({
-        where: { userId, productId }
-      });
-
-      res.json({ isInWishlist: !!item });
-    } catch (error) {
-      console.error('Error in checkWishlistItem:', error);
-      res.status(500).json({ message: "Error checking wishlist item" });
-    }
-  },
-
   addToWishlist: async (req, res) => {
     try {
-      if (!req.user || !req.user.id) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-
       const { productId } = req.body;
-      const userId = req.user.id;
 
       // Validate input data
       if (!productId) {
@@ -88,21 +58,8 @@ module.exports = {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      // Check if already in wishlist
-      const existingItem = await Favorite.findOne({
-        where: { userId, productId: productIdInt }
-      });
-
-      if (existingItem) {
-        return res.status(200).json({ 
-          message: "Item already in wishlist", 
-          isInWishlist: true 
-        });
-      }
-
       // Create new wishlist item
       const wishlistItem = await Favorite.create({
-        userId,
         productId: productIdInt
       });
 
@@ -122,15 +79,10 @@ module.exports = {
 
   removeFromWishlist: async (req, res) => {
     try {
-      if (!req.user || !req.user.id) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-
       const { productId } = req.params;
-      const userId = req.user.id;
 
       const deleted = await Favorite.destroy({
-        where: { userId, productId }
+        where: { productId }
       });
 
       if (deleted) {
