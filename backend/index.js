@@ -23,8 +23,8 @@ app.use(cors({
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
 });
-app.use('/api/user',userRoute)
-app.use('/api/product',productRoute)
+app.use('/api/user', userRoute)
+app.use('/api/product', productRoute)
 app.post("/api/payment", handlePayment)
 app.use('/api/contact', contactRoute);
 app.listen(port, () => {

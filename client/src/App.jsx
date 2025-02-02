@@ -1,4 +1,3 @@
-
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Cart from "./components/Cart";
@@ -13,9 +12,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminPage from './components/AdminPage';
 import Profile from './components/Profile';
 import './App.css';
-
-
 import Footer from "./components/Footer";
+import SellerPage from './components/sellerpage';
 
 function App() {
 
@@ -46,7 +44,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/seller" element={<SellerPage />} />
         </Routes>
       </Router>
       <Footer />

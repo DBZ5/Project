@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { getUser,addUser,Login,googleSignup,LoginwithGoogle,deleteUser,getUsersAndSellers } = require('../controller/User.controller');
-const  {authenticateToken}= require("../utilities");
+const { getUser, addUser, Login, googleSignup, LoginwithGoogle, deleteUser, getUsersAndSellers } = require('../controller/User.controller');
+const { authenticateToken } = require("../utilities");
 const User = require('../models/User.model');
 
 router.get("/", authenticateToken, getUser);
 router.post("/createAccount", addUser);
-router.post("/login",Login)
-router.post("/googleSignup",googleSignup)
-router.post("/loginWithGoogle",LoginwithGoogle)
+router.post("/login", Login);
+router.post("/googleSignup", googleSignup);
+router.post("/loginWithGoogle", LoginwithGoogle);
 router.delete("/:id", deleteUser);
 router.get("/usersAndSellers", authenticateToken, getUsersAndSellers);
 router.put("/:id", authenticateToken, async (req, res) => {

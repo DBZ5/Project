@@ -1,8 +1,10 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth); // Get user from Redux state
 
   return (
     <nav>
@@ -48,6 +50,11 @@ const Navbar = () => {
             />
           </svg>
         </button>
+        {user && user.role === 'seller' && ( 
+          <button className="nav-buttons" onClick={() => navigate("/seller")}>
+            Create Product
+          </button>
+        )}
       </div>
     </nav>
   );
