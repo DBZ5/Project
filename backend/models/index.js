@@ -35,7 +35,7 @@ db.Products.belongsTo(db.User, {
 
 // Remove the duplicate sync calls and use only one
 // Use force: false to prevent dropping tables
-db.sequelize.sync({ force: false , alter: true } )
+db.sequelize.sync({ force: false , alter: false } )
   .then(() => {
     console.log('Database synchronized');
   })
