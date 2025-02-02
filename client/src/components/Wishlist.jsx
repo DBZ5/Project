@@ -1,74 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Navbar from './Navbar';
 import './Wishlist.css';
+import { setWishlistItems, removeFromWishlistSuccess } from '../store/wishlistSlice';
 
 const Wishlist = () => {
-  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { token, isAuthenticated } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const { items } = useSelector((state) => state.wishlist);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isAuthenticated || !token) {
-      navigate('/login');
-      return;
-    }
-
     const fetchWishlist = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/wishlist`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          }
+          `${import.meta.env.VITE_API_URL}/api/wishlist`
         );
-        setItems(response.data);
+        dispatch(setWishlistItems(response.data));
         setError(null);
       } catch (error) {
         console.error('Error fetching wishlist:', error);
-        if (error.response?.status === 401) {
-          navigate('/login');
-        } else {
-          setError('Error fetching wishlist items');
-        }
+        setError('Error fetching wishlist items');
       } finally {
         setLoading(false);
       }
     };
 
     fetchWishlist();
-  }, [token, isAuthenticated, navigate]);
+  }, [dispatch]);
 
   const removeFromWishlist = async (productId) => {
-    if (!isAuthenticated || !token) {
-      navigate('/login');
-      return;
-    }
-
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/wishlist/${productId}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
+        `${import.meta.env.VITE_API_URL}/api/wishlist/${productId}`
       );
-      setItems(items.filter(item => item.id !== productId));
+      dispatch(removeFromWishlistSuccess(productId));
     } catch (error) {
       console.error('Error removing item from wishlist:', error);
-      if (error.response?.status === 401) {
-        navigate('/login');
-      }
     }
   };
 
