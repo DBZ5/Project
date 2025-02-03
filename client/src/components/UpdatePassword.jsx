@@ -30,7 +30,7 @@ const UpdatePassword = () => {
         }
 
         try {
-            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/update-password`, {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/update/update-password`, {
                 token,
                 newPassword
             });

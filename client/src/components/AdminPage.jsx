@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./Navbar"; 
-import Swal from 'sweetalert2'; // Import SweetAlert2
-import './AdminPage.css'; // Importing the CSS file for styling
+import Swal from 'sweetalert2'; 
+import './AdminPage.css'; 
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
@@ -16,8 +16,11 @@ const AdminPage = () => {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                setUsers(response.data.users);
-                setSellers(response.data.sellers);
+                const allUsers = response.data.users;
+                const allSellers = response.data.sellers;
+
+                setUsers(allUsers.filter(user => user.role !== 'seller'));
+                setSellers(allSellers);
             } catch (error) {
                 console.error("Error fetching users and sellers:", error);
             }
@@ -61,9 +64,14 @@ const AdminPage = () => {
 
         if (result.isConfirmed) {
             try {
+                const sellerProducts = sellers.find(seller => seller.id === sellerId).Products;
+                await Promise.all(sellerProducts.map(product => 
+                    axios.delete(`${import.meta.env.VITE_API_URL}/api/product/${product.id}`)
+                ));
+
                 await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/${sellerId}`);
                 setSellers(sellers.filter(seller => seller.id !== sellerId));
-                Swal.fire('Deleted!', 'Seller has been deleted.', 'success');
+                Swal.fire('Deleted!', 'Seller and their products have been deleted.', 'success');
             } catch (error) {
                 console.error("Error deleting seller:", error);
             }
@@ -109,9 +117,9 @@ const AdminPage = () => {
         if (result.isConfirmed) {
             try {
                 await axios.put(`${import.meta.env.VITE_API_URL}/api/user/${userId}`, { role: 'seller' });
-                setUsers(users.map(user => 
-                    user.id === userId ? { ...user, role: 'seller' } : user
-                ));
+                const updatedUser = users.find(user => user.id === userId);
+                setUsers(users.filter(user => user.id !== userId));
+                setSellers([...sellers, { ...updatedUser, role: 'seller' }]);
                 Swal.fire('Updated!', 'User role has been updated to seller.', 'success');
             } catch (error) {
                 console.error("Error updating user role:", error);
@@ -144,7 +152,6 @@ const AdminPage = () => {
                                         <td>{user.email}</td>
                                         <td>
                                             <button className="admin-button" onClick={() => handleDeleteUser(user.id)}>Delete User</button>
-                                            <button className="admin-button" onClick={() => handleUpdateUserRole(user.id)}>Make Seller</button>
                                         </td>
                                     </tr>
                                 ))}

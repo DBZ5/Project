@@ -5,6 +5,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { authStart, authSuccess, authFailure } from '../store/authSlice';
 import Navbar from './Navbar';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,84 +27,89 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(authStart());
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, formData);
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      dispatch(authSuccess({ token, user }));
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      dispatch(authSuccess(data));
-      console.log(data , "data");
-      console.log(data.accessToken , "data.access_token");
       // Navigate based on user role
-      if (data.user.role === 'admin') {
-        console.log(data.accessToken , "data.access_token");
-        
-        localStorage.setItem('token', data.accessToken);
-        navigate('/admin');
-      } else {
-        localStorage.setItem('token', data.accessToken);
-        navigate('/');
+      switch (user.role) {
+        case 'admin':
+          navigate('/admin');
+          break;
+        case 'seller':
+          navigate('/seller');
+          break;
+        default:
+          navigate('/');
+          break;
       }
-    } catch (err) {
-      dispatch(authFailure(err.message || 'Login failed'));
+
+    } catch (error) {
+      dispatch(authFailure(error.response?.data?.message || 'Login failed'));
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.response?.data?.message || 'Invalid credentials'
+      });
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (response) => {
-      dispatch(authStart());
-      try {
-        const userInfo = await axios.get(
-          'https://www.googleapis.com/oauth2/v3/userinfo',
-          {
-            headers: { Authorization: `Bearer ${response.access_token}` },
-          }
-        );
 
-        const loginResponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: userInfo.data.email,
-            }),
-          }
-        );
-
-        const data = await loginResponse.json();
-
-        if (!loginResponse.ok) {
-          throw new Error(data.message || 'Google login failed');
+const handleGoogleLogin = useGoogleLogin({
+  onSuccess: async (response) => {
+    dispatch(authStart());
+    try {
+      const userInfo = await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo',
+        {
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+          },
         }
+      );
 
-        dispatch(authSuccess(data));
-        
-        // Navigate based on user role
-        if (data.user.role === 'admin') {
+      const googleLoginResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/user/loginWithGoogle`,
+        {
+          email: userInfo.data.email,
+          fullName: userInfo.data.name,
+        }
+      );
+
+      const { token, user } = googleLoginResponse.data;
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      dispatch(authSuccess({ token, user }));
+
+      // Navigate based on user role
+      switch (user.role) {
+        case 'admin':
           navigate('/admin');
-        } else {
+          break;
+        case 'seller':
+          navigate('/seller');
+          break;
+        default:
           navigate('/');
-        }
-      } catch (err) {
-        dispatch(authFailure(err.message || 'Google login failed'));
+          break;
       }
-    },
-  });
 
+    } catch (error) {
+      dispatch(authFailure(error.message || 'Google login failed'));
+    }
+  },
+  onError: (error) => {
+    dispatch(authFailure('Google login failed'));
+    console.error('Google Login Error:', error);
+  },
+});
   return (
     <div className="login-page">
       <Navbar />

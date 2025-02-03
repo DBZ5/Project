@@ -2,14 +2,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import './Profile.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { authSuccess } from '../store/authSlice';
 
 const Profile = () => {
   console.log("Retrieving user data:", localStorage.getItem('user'));
-  const user = JSON.parse(localStorage.getItem('user') || 'null') || useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user) || JSON.parse(localStorage.getItem('user') || '{}');
   console.log("Parsed user data:", user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
@@ -24,6 +24,40 @@ const Profile = () => {
   // Debug logging
   console.log('User data in Profile:', user);
   console.log('CreatedAt value:', user?.createdAt);
+
+  // Debugging check
+  useEffect(() => {
+    console.log('User data:', user);
+    if (!user || !user.id) {
+      console.error('User data is missing or incomplete:', user);
+      // Fetch user data if missing
+      fetchUserData();
+    }
+  }, [user]);
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Update Redux state and local storage
+      dispatch(authSuccess({
+        user: response.data,
+        token
+      }));
+      localStorage.setItem('user', JSON.stringify(response.data));
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to fetch user data. Please log in again.'
+      });
+      // Redirect to login if user data cannot be fetched
+      navigate('/login');
+    }
+  };
 
   if (!isAuthenticated) {
     navigate('/login');
@@ -93,31 +127,53 @@ const Profile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    const config = {
-      headers: { Authorization: `Bearer ${token}` }
-    };
-    console.log("slmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",user.id);
+
+    // Ensure user ID is available
+    const userId = user?.id;
+    console.log("User ID:", userId);
+    console.log("User:", user);
     
+    if (!userId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: 'User ID is missing. Please log in again.'
+      });
+      return;
+    }
+
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/user/${user.id}`,
+        `${import.meta.env.VITE_API_URL}/api/user/${userId}`,
         profileData,
-        config
+        {
+          headers: { 
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
 
-      if (response.data) {
-        // Handle successful update
-        console.log('Profile updated successfully:', response.data);
-        Swal.fire('Success!', 'Profile updated successfully', 'success');
-        localStorage.setItem('user', JSON.stringify(response.data));
-        setEditMode(false);
-        dispatch(authSuccess({ user: response.data, token }));
-      }
+      // Update local storage and Redux state
+      localStorage.setItem('user', JSON.stringify(response.data));
+      dispatch(authSuccess({
+        user: response.data,
+        token: localStorage.getItem('token')
+      }));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Profile Updated',
+        text: 'Your profile has been successfully updated.'
+      });
+      setEditMode(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
-      // Handle error (show error message to user)
-      Swal.fire('Error!', error.response?.data?.message || 'Failed to update profile', 'error');
+      console.error('Update error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: error.response?.data?.message || 'Failed to update profile. Please try again.'
+      });
     }
   };
 
@@ -186,7 +242,7 @@ const Profile = () => {
           <div className="profile-actions">
             {editMode ? (
               <>
-                <button className="profile-button save-button" onClick={handleUpdate }>
+                <button className="profile-button save-button" onClick={handleUpdate}>
                   Save Changes
                 </button>
                 <button className="profile-button cancel-button" onClick={() => setEditMode(false)}>

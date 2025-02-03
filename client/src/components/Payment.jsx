@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import Navbar from "./Navbar";
+import Swal from "sweetalert2";
+import './Payment.css';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -12,53 +15,85 @@ const PaymentForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!stripe || !elements) {
+        console.log("Stripe not loaded");
+        return;
+    }
+
+    const cardElement = elements.getElement(CardElement);
+
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: elements.getElement(CardElement),
+        type: 'card',
+        card: cardElement,
     });
 
     if (error) {
-      setError(error.message);
-    } else {
-      const { id } = paymentMethod;
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            amount: 1000, // Replace with actual amount
-            id,
-          }),
+        console.log('[error]', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Error',
+          text: error.message,
+          customClass: {
+            popup: 'swal-wide'
+          }
         });
-        const data = await response.json();
-        if (data.success) {
-          setSuccess(true);
-        }
-      } catch (error) {
-        setError("Payment failed");
-      }
+    } else {
+        console.log('PaymentMethod', paymentMethod);
+        Swal.fire({
+          title: 'Payment Successful!',
+          text: 'Your transaction has been completed successfully.',
+          icon: 'success',
+          imageUrl: 'https://i.imgur.com/4NZ6uLY.jpg',
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: 'Custom image',
+          background: '#fff url(/images/trees.png)',
+          backdrop: `
+            rgba(0,0,123,0.4)
+            url("https://sweetalert2.github.io/images/nyan-cat.gif")
+            left top
+            no-repeat
+          `,
+          showConfirmButton: true,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Great!',
+          customClass: {
+            popup: 'custom-popup-class'
+          }
+        });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={!stripe}>
-        Pay
-      </button>
-      {error && <div>{error}</div>}
-      {success && <div>Payment Successful!</div>}
-    </form>
+    <div className="payment-container">
+      <div className="card-preview">
+        <div className="card">
+          <div className="card-details">
+          </div>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} className="payment-form">
+        <h2>Payment Details</h2>
+        <CardElement className="card-input" />
+        <button type="submit" disabled={!stripe} className="pay-button">
+          Confirm
+        </button>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">Payment Successful!</div>}
+      </form>
+    </div>
   );
 };
 
 const Payment = () => {
   return (
-    <Elements stripe={stripePromise}>
-      <PaymentForm />
-    </Elements>
+    <>
+      <Navbar />
+      <Elements stripe={stripePromise}>
+        <PaymentForm />
+      </Elements>
+    </>
   );
 };
 

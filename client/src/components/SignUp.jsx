@@ -56,7 +56,7 @@ const Signup = () => {
       }
 
       dispatch(authSuccess(data));
-      navigate('/');
+      navigate('/login');
     } catch (err) {
       dispatch(authFailure(err.message || 'Signup failed'));
     }
