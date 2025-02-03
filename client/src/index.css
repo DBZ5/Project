@@ -964,8 +964,7 @@ hr {
 }
 
 .about-image-img {
-  width: 80%;
-  height: auto;
+  width: 90%;
   border-radius: 1rem;
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
 }

@@ -25,7 +25,7 @@ const About = () => {
         <div className="about-image">
           <img
             className="about-image-img"
-            src="https://i.postimg.cc/RVnnjjVD/Capture-d-cran-2025-01-28-163446.png"
+            src="https://imgs.search.brave.com/gv0JkcyuwZbUWLo6KUbtjB8jsU8jYxeQEAXCMdihkwA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8x/LzE4L0FtYXpvbi5k/ZV8xMjA0Xy1fcGFu/b3JhbWlvLmpwZw"
             alt="Shopping"
           />
         </div>
