@@ -1,54 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './Navbar';
-import './sellerpage.css'; // Import the CSS file for styling
-import { useDispatch } from 'react-redux';
-import { addProduct } from '../store/productSlice';
+import './sellerpage.css'; // Import your CSS file
+import { useSelector } from 'react-redux';
 
 const SellerPage = () => {
     const [productData, setProductData] = useState({
         name: '',
         price: '',
         description: '',
-        image: null,
+        image: '',
         category: ''
     });
     const [products, setProducts] = useState([]);
-    const dispatch = useDispatch();
+    const token = useSelector((state) => state.auth.token); // Get the token from Redux state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProductData({
-            ...productData,
-            [name]: value
-        });
-    };
-
-    const handleImageChange = (e) => {
-        setProductData({
-            ...productData,
-            image: e.target.files[0]
-        });
+        setProductData({ ...productData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('name', productData.name);
-        formData.append('price', productData.price);
-        formData.append('description', productData.description);
-        formData.append('image', productData.image);
-        formData.append('category', productData.category);
-
         try {
-            const response = await axios.post('http://localhost:8000/api/product', formData, {
+            const response = await axios.post('http://localhost:8000/api/seller/products', productData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    Authorization: `Bearer ${token}` // Include the token in the headers
                 }
             });
-            dispatch(addProduct(response.data));
-            setProducts([...products, response.data]);
-            setProductData({ name: '', price: '', description: '', image: null, category: '' });
+            console.log('Product added:', response.data);
+            // Optionally, fetch products again to update the list
+            fetchProducts();
         } catch (error) {
             console.error('Error adding product:', error);
         }
@@ -56,10 +37,15 @@ const SellerPage = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/product`);
-            setProducts(response.data);
+            const token = localStorage.getItem('token'); // Get the token from local storage
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/products`, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Include the token in the headers
+                }
+            });
+            setProducts(response.data || []); // Ensure response.data is an array
         } catch (error) {
-            console.error('Error fetching products:', error);
+            console.error("Error fetching products:", error);
         }
     };
 
@@ -69,53 +55,23 @@ const SellerPage = () => {
 
     return (
         <div className="seller-page">
-            <Navbar />
             <h1>Seller Dashboard</h1>
-            <form onSubmit={handleSubmit} className="product-form">
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Product Name"
-                    value={productData.name}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="number"
-                    name="price"
-                    placeholder="Product Price"
-                    value={productData.price}
-                    onChange={handleChange}
-                    required
-                />
-                <textarea
-                    name="description"
-                    placeholder="Product Description"
-                    value={productData.description}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="file"
-                    name="image"
-                    onChange={handleImageChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="category"
-                    placeholder="Category"
-                    value={productData.category}
-                    onChange={handleChange}
-                    required
-                />
+            <form onSubmit={handleSubmit}>
+                <input type="text" name="name" placeholder="Product Name" onChange={handleChange} required />
+                <input type="number" name="price" placeholder="Price" onChange={handleChange} required />
+                <textarea name="description" placeholder="Description" onChange={handleChange} required />
+                <input type="text" name="image" placeholder="Image URL" onChange={handleChange} required />
+                <input type="text" name="category" placeholder="Category" onChange={handleChange} required />
                 <button type="submit">Add Product</button>
             </form>
-            <h2>My Products</h2>
-            <ul className="product-list">
-                {products.map((product) => (
+            <h2>Your Products</h2>
+            <ul>
+                {Array.isArray(products) && products.map((product) => (
                     <li key={product.id}>
-                        {product.name} - ${product.price}
+                        <h3>{product.name}</h3>
+                        <p>{product.description}</p>
+                        <p>Price: ${product.price}</p>
+                        <img src={product.image} alt={product.name} />
                     </li>
                 ))}
             </ul>
