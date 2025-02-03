@@ -73,10 +73,6 @@ const Navbar = () => {
     setShowDropdown(false);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
 
   return (
     <nav>
@@ -171,9 +167,6 @@ const Navbar = () => {
             <div className="dropdown-item">My Cancellations</div>
             <div className="dropdown-item">My Reviews</div>
             <div className="dropdown-item" onClick={handleLogout}>Logout</div>
-            <div className="dropdown-item" onClick={handleLogout}>
-              Logout
-            </div>
           </div>
         )}
       </div>
