@@ -1,9 +1,202 @@
-.custom-popup-class {
-    font-family: 'Helvetica', 'Arial', sans-serif;
-    font-size: 16px;
-    color: #333;
+/* client/src/components/Payment.css */
+.payment-form {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 480px;
+  margin: 40px auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.swal-wide{
-    width:600px !important;
+/* Card Container */
+.card-container {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.card-chip {
+  width: 45px;
+  height: 35px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border-radius: 6px;
+}
+
+.card-brand {
+  display: flex;
+  gap: 8px;
+}
+
+/* Form Elements */
+.payment-form .input-group {
+  margin-bottom: 24px;
+}
+
+.payment-form label {
+  display: block;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.payment-form input,
+.StripeElement {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.payment-form input:hover,
+.StripeElement:hover {
+  background: #ffffff;
+  border-color: #d1d5db;
+}
+
+.payment-form input:focus,
+.StripeElement--focus {
+  background: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  outline: none;
+}
+
+/* Stripe Element Styling */
+.StripeElement {
+  background-color: #ffffff;
+}
+
+.StripeElement--invalid {
+  border-color: #ef4444;
+}
+
+/* Button Styling */
+.payment-form button {
+  width: 100%;
+  padding: 16px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 32px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.payment-form button:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.payment-form button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.payment-form button:disabled {
+  background: #e5e7eb;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Status Messages */
+.payment-form .error {
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-form .success {
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Security Badge */
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 13px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.security-badge svg {
+  width: 16px;
+  height: 16px;
+  color: #059669;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .payment-form {
+    padding: 24px;
+    margin: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .payment-form button {
+    padding: 14px;
+  }
+}
+
+/* Card Number Format */
+.card-number-format {
+  letter-spacing: 0.08em;
+}
+
+/* Card Icons */
+.card-icons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.card-icons img {
+  height: 24px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.card-icons img:hover {
+  opacity: 1;
 }

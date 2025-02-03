@@ -5,25 +5,36 @@ const upload = multer({ dest: 'uploads/' });
 
 exports.createProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category } = req.body;
+    const { name, description, price, category, images } = req.body;
 
-    // Validate input data
-    if (!name || !price) {
-      return res.status(400).json({ message: "Name and price are required." });
+    // Validate required fields
+    if (!name || !description || !price || !category) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const newProduct = await Product.create({
+    // Validate image - ensure it's a string URL
+    let imageUrl = '';
+    if (Array.isArray(images) && images.length > 0) {
+      // Take the first image if multiple are provided
+      imageUrl = images[0];
+    } else if (typeof images === 'string') {
+      imageUrl = images;
+    } else {
+      return res.status(400).json({ message: 'Invalid image format' });
+    }
+
+    const product = await Product.create({
       name,
-      price,
       description,
-      image,
+      price,
       category,
+      image: imageUrl // Store as string
     });
 
-    res.status(201).json(newProduct);
+    res.status(201).json(product);
   } catch (error) {
-    console.error("Error adding product:", error);
-    res.status(500).json({ message: "Failed to add product", error: error.message });
+    console.error('Error creating product:', error);
+    res.status(500).json({ message: 'Error creating product', error: error.message });
   }
 };
 
