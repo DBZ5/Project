@@ -100,3 +100,23 @@ exports.updateProduct = async (req, res) => {
     res.status(500).json({ message: "Failed to update product" });
   }
 };
+
+exports.addProduct = async (req, res) => {
+  try {
+    const { name, price, description, category } = req.body;
+    const image = req.file.path; // Assuming you're using multer for file uploads
+
+    const newProduct = await Product.create({
+      name,
+      price,
+      description,
+      image,
+      category
+    });
+
+    res.status(201).json({ message: 'Product added successfully', product: newProduct });
+  } catch (error) {
+    console.error('Error adding product:', error);
+    res.status(500).json({ message: 'Failed to add product', error: error.message });
+  }
+};

@@ -19,7 +19,7 @@ import AllProducts from "./components/allProducts";
 import Footer from "./components/Footer";
 import AdminRoute from './components/AdminRoute';
 import UpdatePassword from './components/UpdatePassword';
-import SellerPage from './components/sellerpage';
+import SellerPage from "./components/sellerpage";
 import SellerRoute from './components/SellerRoute';
 
 function App() {
